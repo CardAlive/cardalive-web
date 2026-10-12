@@ -118,7 +118,14 @@
 
   document.addEventListener('click', function (e) {
     var t = e.target.closest('[data-goto]');
-    if (t) { e.preventDefault(); go(parseInt(t.dataset.goto, 10)); }
+    if (!t) return;
+    e.preventDefault();
+    go(parseInt(t.dataset.goto, 10));
+    // "Join the Waitlist" lands in the lantern's field once the scene has re-formed (not on touch: the keyboard would cover it)
+    var field = t.dataset.focus && document.getElementById(t.dataset.focus);
+    if (field && !matchMedia('(pointer: coarse)').matches) {
+      setTimeout(function () { field.focus({ preventScroll: true }); }, reduceMotion ? 400 : 1300);
+    }
   });
 
   function go(i, opts) {
@@ -469,24 +476,75 @@
   })();
 
   /* ------------------------------------------------------------
-     Contact: copy the address
+     Email forms (the lantern, the raven). There is no backend:
+     FormSubmit relays each address to the inbox in the form's action.
      ------------------------------------------------------------ */
   (function () {
-    var btn = $('#copy-mail'); if (!btn) return;
-    var addr = btn.dataset.addr, timer = null;
-    function done(ok) {
-      btn.textContent = ok ? 'Copied' : 'Select it above';
-      btn.classList.toggle('is-done', ok);
-      clearTimeout(timer);
-      timer = setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('is-done'); }, 2200);
-      if (ok) sfx.shimmer();
-    }
-    btn.addEventListener('click', function () {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(addr).then(function () { done(true); }, function () { done(false); });
-      } else {
-        done(false);
+    var INBOX = 'cardalive@protonmail.com';
+    var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    $$('form[data-raven]').forEach(function (form) {
+      var input = $('input[type="email"]', form), send = $('button[type="submit"]', form), status = $('.raven__status', form);
+      var busy = false;
+
+      function say(msg, err) {
+        status.textContent = msg;
+        status.classList.toggle('is-err', !!err);
       }
+      function done(addr) {
+        $$('[data-done]', form).forEach(function (el) { el.textContent = el.dataset.done.replace('{email}', addr); });
+        status.classList.remove('is-err');
+        form.classList.add('is-sent');
+        input.blur();
+        sfx.shimmer();
+      }
+      function fail() {
+        say('The raven was lost. Try again, or write to ', true);
+        var a = document.createElement('a');
+        a.href = 'mailto:' + INBOX; a.textContent = INBOX;
+        status.appendChild(a);
+        status.appendChild(document.createTextNode('.'));
+        sfx.tick();
+      }
+
+      input.addEventListener('input', function () { if (status.classList.contains('is-err')) say(''); });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (busy || form.classList.contains('is-sent')) return;
+        var addr = input.value.trim();
+        if (!EMAIL.test(addr)) { say('That does not look like an email address.', true); input.focus(); sfx.tick(); return; }
+
+        var data = {};
+        new FormData(form).forEach(function (v, k) { data[k] = v; });
+        if (data._honey) { done(addr); return; }  // only a bot fills the hidden field
+        data.email = addr;
+        data._replyto = addr;
+        data._subject = form.dataset.subject + ': ' + addr;
+        data._template = 'table';
+
+        busy = true; send.disabled = true; form.classList.add('is-busy');
+        say('Sending\u2026');
+        var ctrl = window.AbortController ? new AbortController() : null;
+        var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 15000);
+
+        fetch(form.action.replace('://formsubmit.co/', '://formsubmit.co/ajax/'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(data),
+          signal: ctrl ? ctrl.signal : undefined
+        })
+          .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
+          .then(function (res) {
+            // until the inbox confirms the relay, FormSubmit holds submissions (and says so); they arrive once it is confirmed
+            var held = /activat/i.test(res.j.message || '');
+            if (res.ok && (String(res.j.success) === 'true' || held)) done(addr); else fail();
+          }, fail)
+          .then(function () {
+            clearTimeout(timer);
+            busy = false; send.disabled = false; form.classList.remove('is-busy');
+          });
+      });
     });
   })();
 

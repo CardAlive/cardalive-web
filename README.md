@@ -16,13 +16,13 @@ over the roofs while the text dissolves out and re-forms.
 
 | # | Scene (`id`) | Camera (`data-cam`) | What's in it |
 |---|---|---|---|
-| I | `hero` | `hero` | logo, tagline, waitlist |
+| I | `hero` | `hero` | logo, tagline, waitlist button (flies to VI) |
 | II | `kishi` | `companion` | holographic card, Kishi, his arts |
 | III | `scales` | `scale-world` / `scale-table` / `scale-diorama` | the three scales, the Veil Dive |
 | IV | `city` | one per district | auto-tour of the road north; click any stop on the route bar |
 | V | `maw` | `maw` | Jaw and the fight |
-| VI | `waitlist` | `finale` | lantern CTA, the vision line, early footage in a dialog |
-| VII | `contact` | `contact` | cardalive@protonmail.com, copy button, subject shortcuts, fine print |
+| VI | `waitlist` | `finale` | the lantern: waitlist email field, the vision line, early footage in a dialog |
+| VII | `contact` | `contact` | contact email field ("Send a raven"), fine print |
 
 The district tour runs Lantern Row → Weighhouse Market → Assize Quay → the Underline → the Great Span
 → Cinder Close → Cathedral Plaza → the Cathedral (`STOPS` in `main.js`). The hard-light bridge
@@ -104,17 +104,30 @@ In-engine screenshots of the city are **not** on the site: several city source p
 repo are still marked `LICENSE_REVIEW_REQUIRED` (`CardAlive/Environments/ATTRIBUTION.md`). Clear
 those before publishing captures.
 
-## Waitlist
+## Waitlist and contact
 
-Every waitlist button links to the Google Form `https://forms.gle/tzt7sP8B76FTRjBf7`. Responses
-live in the form's Google Sheet; no backend, no keys.
+Both scenes ask for one thing, the visitor's email. There is no backend: the two forms
+(`form[data-raven]`) post JSON to [FormSubmit](https://formsubmit.co)'s AJAX endpoint, which emails
+each address to `cardalive@protonmail.com` (the form `action`). Subjects read
+`CardAlive waitlist: <email>` or `CardAlive contact: <email>`, Reply-To is the visitor, and a
+`source` field says which scene it came from. No account, no keys.
+
+- **First use:** FormSubmit sends an *Activate Form* email to the inbox on the first submission.
+  Until someone clicks it, submissions are held (up to 30 days) and arrive once it is clicked; the
+  page treats that "needs activation" reply as success.
+- **Spam:** a hidden `_honey` field; anything that fills it is dropped.
+- **Hide the address:** after activation FormSubmit offers a random alias. Put it in place of the
+  address in both `action` URLs in `index.html`.
+- **Testing:** submitting locally sends a real email. To test the page without that, stub
+  `window.fetch` for `formsubmit.co` (the forms only call `fetch`).
+- Header and hero waitlist buttons fly to scene VI and focus the field (`data-focus`).
 
 ## Structure
 
 ```
 index.html              markup, chapters, import map
 assets/css/style.css    the whole look
-assets/js/main.js       scenes, input, tour, card tilt, fight, sound
+assets/js/main.js       scenes, input, tour, card tilt, fight, email forms, sound
 assets/js/world.js      the city (three.js module)
 assets/img/             logo, favicon, share image, fallback skyline
 assets/video/           footage + poster frames
