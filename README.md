@@ -16,7 +16,7 @@ over the roofs while the text dissolves out and re-forms.
 
 | # | Scene (`id`) | Camera (`data-cam`) | What's in it |
 |---|---|---|---|
-| I | `hero` | `hero` | logo, tagline, waitlist button (flies to VI) |
+| I | `hero` | `hero` | logo, tagline, waitlist button (flies to VI), the trailer teaser |
 | II | `kishi` | `companion` | holographic card, Kishi, his arts |
 | III | `scales` | `scale-world` / `scale-table` / `scale-diorama` | the three scales, the Veil Dive |
 | IV | `city` | one per district | auto-tour of the road north; click any stop on the route bar |
@@ -38,7 +38,7 @@ add a `<section class="scene">` with `data-cam`, `data-corr` and `data-title`, a
 | `span` | the Great Span stop | the hard-light deck builds plank by plank |
 | `veil` | the Veil Dive button | the whole city turns to blueprint |
 | `boss`, `hit`, `withdrawn` | the Maw scene and its fight | the wound opens, flashes on hits, closes when Jaw withdraws |
-| `reduceMotion` | the OS setting and the Full motion toggle | dissolves instead of flights |
+| `reduceMotion` | the Reduce motion toggle (off by default) | dissolves instead of flights |
 
 Wheel input is debounced per gesture: a trackpad flick and its inertia tail move one scene, as does
 one mouse notch. Firefox's line-mode deltas are normalised. A scene whose content is taller than the
@@ -66,9 +66,10 @@ without JavaScript, so `cardalive.xyz/contact` is a shareable link.
 
 - No WebGL, or the CDN never loads: `body.no-webgl` paints a dusk gradient and
   `assets/img/skyline.svg`. Everything else, including the fight, still works.
-- `prefers-reduced-motion: reduce` (including Windows with *Animation effects* off): the camera
-  dissolves through dark and cuts instead of flying; no grain, lightning or drifting embers. A
-  **Full motion** button appears in the nav for those visitors and is remembered in `localStorage`.
+- Motion is **on by default**, even for `prefers-reduced-motion: reduce` (including Windows with
+  *Animation effects* off). Those visitors get a **Reduce motion** button in the nav, remembered in
+  `localStorage` (`ca-motion`). Reduced, the camera dissolves through dark and cuts instead of
+  flying; no grain, lightning or drifting embers, and the trailer teaser shows a still frame.
 - Slow GPUs: the renderer drops its pixel ratio after sustained slow frames. Small screens get a
   sparser city and fewer embers.
 
@@ -92,6 +93,17 @@ Then open `http://127.0.0.1:8765/`. Deep links work by scene id (`/#maw`). Debug
 
 ## Footage
 
+The hero carries the 30 s trailer: `cardalive-trailer-loop.mp4` (640×360, no audio, ~1 MB) loops
+muted in the corner while the hero is on screen, and opens `cardalive-trailer.mp4` (1080p, ~14 MB)
+with sound in a dialog. `cardalive-trailer.jpg` is the poster. On phones the teaser sits under the
+buttons as a thumbnail; on short screens it is a play mark and a label, and the loop does not load.
+Re-encode from the master render:
+
+```
+ffmpeg -i ad.mp4 -c:v libx264 -preset slow -crf 22 -maxrate 5M -bufsize 10M -pix_fmt yuv420p        -c:a aac -b:a 160k -movflags +faststart cardalive-trailer.mp4
+ffmpeg -i ad.mp4 -vf scale=640:-2 -c:v libx264 -preset slow -crf 27 -maxrate 900k -bufsize 1800k        -pix_fmt yuv420p -an -movflags +faststart cardalive-trailer-loop.mp4
+```
+
 `assets/video/where-we-are-now.mp4` is the early tabletop build recorded in-headset. Videos must be
 **H.264** — the Quest records HEVC, which Chrome, Firefox and Android will not play:
 
@@ -100,9 +112,11 @@ ffmpeg -i raw.mp4 -vf scale=-2:720 -c:v libx264 -profile:v high -pix_fmt yuv420p
        -preset slow -crf 24 -c:a aac -b:a 128k -movflags +faststart out.mp4
 ```
 
-In-engine screenshots of the city are **not** on the site: several city source packs in the game
-repo are still marked `LICENSE_REVIEW_REQUIRED` (`CardAlive/Environments/ATTRIBUTION.md`). Clear
-those before publishing captures.
+Apart from the trailer, in-engine captures of the city are **not** on the site: several city source
+packs in the game repo are still marked `LICENSE_REVIEW_REQUIRED` (`CardAlive/Environments/ATTRIBUTION.md`).
+Clear those before publishing more. The trailer's two in-engine shots (0:15–0:20, Kishi in the alley
+and the city diorama) went live on 2026-10-13 on the owner's call while those packs were still under
+review. If a pack turns out to forbid it, replace the trailer with a cut without them.
 
 ## Waitlist and contact
 

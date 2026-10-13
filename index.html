@@ -59,8 +59,8 @@
     </button>
     <div class="nav__right">
       <a class="nav__link" href="#contact" data-goto="6">Contact</a>
-      <button class="sound motion" id="motion" type="button" hidden aria-pressed="false" title="Your system asks for reduced motion. Turn the camera flights on anyway.">
-        <span class="motion__ico" aria-hidden="true"></span><span class="motion__label">Full motion</span>
+      <button class="sound motion" id="motion" type="button" hidden aria-pressed="true" title="Turn off the camera flights and drifting effects.">
+        <span class="motion__ico" aria-hidden="true"></span><span class="motion__label">Reduce motion</span>
       </button>
       <button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Turn sound on">
         <span class="sound__bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
@@ -97,6 +97,17 @@
           </button>
           <button class="btn btn--ghost" type="button" data-goto="1">Enter</button>
         </div>
+        <!-- The trailer, previewed as a muted loop; the full cut with sound opens in a dialog. -->
+        <button class="teaser fx" style="--d:8" type="button" data-reel="trailer" aria-label="Watch the CardAlive trailer, 30 seconds, with sound">
+          <span class="teaser__frame">
+            <video class="teaser__video" id="teaser" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"
+                   poster="./assets/video/cardalive-trailer.jpg">
+              <source src="./assets/video/cardalive-trailer-loop.mp4" type="video/mp4" />
+            </video>
+            <span class="teaser__play" aria-hidden="true"></span>
+          </span>
+          <span class="teaser__label">Watch the trailer <b>0:30</b></span>
+        </button>
       </div>
     </section>
 
@@ -235,7 +246,7 @@
           <p class="raven__status" role="status" data-done="We will write to {email} when the gate opens."></p>
         </form>
         <p class="finale__vision fx" style="--d:5">Different games. Same magic. <span>Card-game makers: bring your own card, and we will bring it to life. <a href="#contact" data-goto="6">Talk to us</a></span></p>
-        <button class="footage fx" style="--d:6" type="button" id="footage-open">
+        <button class="footage fx" style="--d:6" type="button" data-reel="footage">
           <span class="footage__play" aria-hidden="true"></span> Watch the early build
         </button>
       </div>
@@ -265,8 +276,17 @@
     </section>
   </main>
 
+  <dialog class="reel" id="trailer" aria-label="CardAlive trailer">
+    <button class="reel__close" type="button" aria-label="Close">&times;</button>
+    <video class="reel__video" controls playsinline preload="none"
+           poster="./assets/video/cardalive-trailer.jpg">
+      <source src="./assets/video/cardalive-trailer.mp4" type="video/mp4" />
+    </video>
+    <p class="reel__cap">CardAlive in thirty seconds. Everything shown is in development.</p>
+  </dialog>
+
   <dialog class="reel" id="footage" aria-label="Early CardAlive build, recorded through a Meta Quest 3">
-    <button class="reel__close" type="button" id="footage-close" aria-label="Close">&times;</button>
+    <button class="reel__close" type="button" aria-label="Close">&times;</button>
     <video class="reel__video" controls playsinline preload="none"
            poster="./assets/video/where-we-are-now.jpg">
       <source src="./assets/video/where-we-are-now.mp4" type="video/mp4" />

@@ -19,7 +19,7 @@ S.worldStarted = true;
 const canvas = document.getElementById('world');
 const dissolve = document.getElementById('dissolve');
 const params = new URLSearchParams(location.search);
-// main.js owns the motion preference (the OS setting, unless the visitor opted into full motion)
+// main.js owns the motion preference (full motion unless the visitor turned it off)
 const rm = () => !!S.reduceMotion;
 const SMALL = Math.min(innerWidth, innerHeight) < 700 || (navigator.hardwareConcurrency || 8) <= 4;
 

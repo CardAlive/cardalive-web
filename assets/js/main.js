@@ -13,27 +13,29 @@
   var params = new URLSearchParams(location.search);
   var STILL = params.has('still');            // screenshots: no intro, no stagger, no auto-tour
   var CAM = params.get('cam');                // screenshots: open on one scene, stop or scale
-  // Motion follows the OS setting, but a visitor whose OS asks for reduced motion can opt into the full flights.
+  // Full motion by default, even when the OS asks for reduced motion. Those visitors get a nav toggle to turn it off, remembered.
   var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   var motionPref = null;
   try { motionPref = localStorage.getItem('ca-motion'); } catch (err) {}
-  var reduceMotion = motionQuery.matches && motionPref !== 'full';
+  var reduceMotion = motionPref === 'reduce';
   function applyMotion() {
     S.reduceMotion = reduceMotion;
     document.body.classList.toggle('rm', reduceMotion);
     var b = document.getElementById('motion');
     if (!b) return;
-    b.hidden = !motionQuery.matches;
+    b.hidden = !motionQuery.matches && !reduceMotion;
     b.setAttribute('aria-pressed', String(!reduceMotion));
     b.querySelector('.motion__label').textContent = reduceMotion ? 'Full motion' : 'Reduce motion';
+    b.title = reduceMotion ? 'Turn the camera flights back on.' : 'Turn off the camera flights and drifting effects.';
   }
   applyMotion();
-  if (motionQuery.addEventListener) motionQuery.addEventListener('change', function () { reduceMotion = motionQuery.matches && motionPref !== 'full'; applyMotion(); });
+  if (motionQuery.addEventListener) motionQuery.addEventListener('change', applyMotion);
   document.getElementById('motion').addEventListener('click', function () {
     reduceMotion = !reduceMotion;
     motionPref = reduceMotion ? 'reduce' : 'full';
     try { localStorage.setItem('ca-motion', motionPref); } catch (err) {}
     applyMotion();
+    teaserSync();
   });
   if (STILL) document.body.classList.add('is-still');
 
@@ -152,6 +154,7 @@
     S.camKey = to.dataset.cam;
     S.corrTarget = parseFloat(to.dataset.corr || '0.1');
     enter(to);
+    teaserSync();
 
     railItems.forEach(function (li, k) { li.classList.toggle('is-here', k === i); });
     document.body.dataset.scene = to.id;
@@ -199,7 +202,7 @@
     if (!el || el.scrollHeight <= el.clientHeight + 24) return false;  // a few px of overflow is not a reason to stop paging
     return dir > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 2 : el.scrollTop > 2;
   }
-  function blocked() { return $('#footage').open; }
+  function blocked() { return !!$('.reel[open]'); }
 
   var lastWheel = 0, wheelAcc = 0, consumed = false;
   window.addEventListener('wheel', function (e) {
@@ -549,19 +552,42 @@
   })();
 
   /* ------------------------------------------------------------
-     Footage
+     Footage: each [data-reel] button opens the dialog it names.
+     The page's own sound ducks while a reel plays.
      ------------------------------------------------------------ */
   (function () {
-    var dlg = $('#footage'), vid = $('video', dlg);
-    $('#footage-open').addEventListener('click', function () {
-      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
-      var p = vid.play(); if (p && p.catch) p.catch(function () {});
+    $$('.reel').forEach(function (dlg) {
+      var vid = $('video', dlg);
+      function close() { vid.pause(); if (dlg.close) dlg.close(); else { dlg.removeAttribute('open'); closed(); } }
+      function closed() { vid.pause(); sfx.duck(false); teaserSync(); }
+      $('.reel__close', dlg).addEventListener('click', close);
+      dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
+      dlg.addEventListener('close', closed);
     });
-    function close() { vid.pause(); if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); }
-    $('#footage-close').addEventListener('click', close);
-    dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
-    dlg.addEventListener('close', function () { vid.pause(); });
+    $$('[data-reel]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var dlg = document.getElementById(btn.dataset.reel), vid = $('video', dlg);
+        if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+        sfx.duck(true); teaserSync();
+        var p = vid.play(); if (p && p.catch) p.catch(function () {});
+      });
+    });
   })();
+
+  /* Hero teaser: the trailer as a muted loop while the hero is on screen, a still frame under reduced motion */
+  var teaser = document.getElementById('teaser');
+  var pageLoaded = document.readyState === 'complete';
+  function teaserSync() {
+    if (!teaser) return;
+    if (pageLoaded && index === 0 && !reduceMotion && !STILL && !document.hidden && !blocked() && teaser.offsetWidth) {
+      teaser.preload = 'auto';
+      var p = teaser.play(); if (p && p.catch) p.catch(function () {});
+    } else teaser.pause();
+  }
+  window.addEventListener('load', function () { pageLoaded = true; teaserSync(); });
+  document.addEventListener('visibilitychange', teaserSync);
+  var teaserResize = 0;
+  window.addEventListener('resize', function () { clearTimeout(teaserResize); teaserResize = setTimeout(teaserSync, 200); });
 
   /* ------------------------------------------------------------
      Sound — synthesised, off until asked for
@@ -630,6 +656,11 @@
         master.gain.cancelScheduledValues(ctx.currentTime);
         master.gain.setTargetAtTime(on ? 0.7 : 0, ctx.currentTime, 0.4);
         return on;
+      },
+      duck: function (down) {
+        if (!ctx) return;
+        master.gain.cancelScheduledValues(ctx.currentTime);
+        master.gain.setTargetAtTime(on && !down ? 0.7 : 0, ctx.currentTime, 0.3);
       },
       whoosh: function (dir) { if (ok()) burst(dir > 0 ? 300 : 1400, 0.9, 1.1, 0.16, dir > 0 ? 1400 : 300); },
       tick: function () { if (ok()) tone('triangle', 1200, 900, 0.06, 0.05); },
