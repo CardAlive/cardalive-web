@@ -58,6 +58,7 @@
       <img src="./assets/img/logo.png" alt="CardAlive" width="1704" height="923" />
     </button>
     <div class="nav__right">
+      <button class="nav__link nav__link--trailer" type="button" data-reel="trailer"><span class="nav__play" aria-hidden="true"></span>Trailer</button>
       <a class="nav__link" href="#contact" data-goto="6">Contact</a>
       <button class="sound motion" id="motion" type="button" hidden aria-pressed="true" title="Turn off the camera flights and drifting effects.">
         <span class="motion__ico" aria-hidden="true"></span><span class="motion__label">Reduce motion</span>
@@ -95,18 +96,21 @@
           <button class="btn btn--blaze" type="button" data-goto="5" data-focus="gate-email">
             <span>Join the Waitlist</span><span class="btn__arrow" aria-hidden="true">&rarr;</span>
           </button>
-          <button class="btn btn--ghost" type="button" data-goto="1">Enter</button>
+          <button class="btn btn--trailer" type="button" data-reel="trailer">
+            <span class="btn--trailer__ico" aria-hidden="true"></span><span>Watch the Trailer</span>
+          </button>
         </div>
         <!-- The trailer, previewed as a muted loop; the full cut with sound opens in a dialog. -->
-        <button class="teaser fx" style="--d:8" type="button" data-reel="trailer" aria-label="Watch the CardAlive trailer, 30 seconds, with sound">
+        <button class="teaser fx" style="--d:8" type="button" data-reel="trailer" aria-label="Watch the CardAlive trailer, 40 seconds, with sound">
           <span class="teaser__frame">
             <video class="teaser__video" id="teaser" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"
-                   poster="./assets/video/cardalive-trailer.jpg">
-              <source src="./assets/video/cardalive-trailer-loop.mp4" type="video/mp4" />
+                   poster="./assets/video/cardalive-trailer.jpg?v=2">
+              <source src="./assets/video/cardalive-trailer-loop.mp4?v=2" type="video/mp4" />
             </video>
+            <span class="teaser__tag" aria-hidden="true"><i></i>New trailer</span>
             <span class="teaser__play" aria-hidden="true"></span>
           </span>
-          <span class="teaser__label">Watch the trailer <b>0:30</b></span>
+          <span class="teaser__label">Watch the trailer <b>0:40</b></span>
         </button>
       </div>
     </section>
@@ -279,10 +283,10 @@
   <dialog class="reel" id="trailer" aria-label="CardAlive trailer">
     <button class="reel__close" type="button" aria-label="Close">&times;</button>
     <video class="reel__video" controls playsinline preload="none"
-           poster="./assets/video/cardalive-trailer.jpg">
-      <source src="./assets/video/cardalive-trailer.mp4" type="video/mp4" />
+           poster="./assets/video/cardalive-trailer.jpg?v=2">
+      <source src="./assets/video/cardalive-trailer.mp4?v=2" type="video/mp4" />
     </video>
-    <p class="reel__cap">CardAlive in thirty seconds. Everything shown is in development.</p>
+    <p class="reel__cap">CardAlive in forty seconds. Everything shown is in development.</p>
   </dialog>
 
   <dialog class="reel" id="footage" aria-label="Early CardAlive build, recorded through a Meta Quest 3">

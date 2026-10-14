@@ -16,7 +16,7 @@ over the roofs while the text dissolves out and re-forms.
 
 | # | Scene (`id`) | Camera (`data-cam`) | What's in it |
 |---|---|---|---|
-| I | `hero` | `hero` | logo, tagline, waitlist button (flies to VI), the trailer teaser |
+| I | `hero` | `hero` | logo, tagline, waitlist and Watch the Trailer buttons, the trailer teaser |
 | II | `kishi` | `companion` | holographic card, Kishi, his arts |
 | III | `scales` | `scale-world` / `scale-table` / `scale-diorama` | the three scales, the Veil Dive |
 | IV | `city` | one per district | auto-tour of the road north; click any stop on the route bar |
@@ -93,15 +93,19 @@ Then open `http://127.0.0.1:8765/`. Deep links work by scene id (`/#maw`). Debug
 
 ## Footage
 
-The hero carries the 30 s trailer: `cardalive-trailer-loop.mp4` (640×360, no audio, ~1 MB) loops
-muted in the corner while the hero is on screen, and opens `cardalive-trailer.mp4` (1080p, ~14 MB)
-with sound in a dialog. `cardalive-trailer.jpg` is the poster. On phones the teaser sits under the
-buttons as a thumbnail; on short screens it is a play mark and a label, and the loop does not load.
-Re-encode from the master render:
+The 40 s trailer opens with sound in a dialog (`cardalive-trailer.mp4`, 1080p, ~21 MB) from three
+places: the hero's **Watch the Trailer** button, the nav's **Trailer** link (wider than 1000 px) and
+the teaser, a muted loop of 0:06–0:36 (`cardalive-trailer-loop.mp4`, 640×360, ~1.5 MB) in a spinning
+frame with a "New trailer" tag. The teaser sits in the hero's corner from 1280×700 up and under the
+buttons on tall tablets; elsewhere it is hidden and the loop never loads. `cardalive-trailer.jpg`
+is the poster. Bump the `?v=` on the trailer URLs in `index.html` when you replace a file. Re-encode
+from the master render:
 
 ```
-ffmpeg -i ad.mp4 -c:v libx264 -preset slow -crf 22 -maxrate 5M -bufsize 10M -pix_fmt yuv420p        -c:a aac -b:a 160k -movflags +faststart cardalive-trailer.mp4
-ffmpeg -i ad.mp4 -vf scale=640:-2 -c:v libx264 -preset slow -crf 27 -maxrate 900k -bufsize 1800k        -pix_fmt yuv420p -an -movflags +faststart cardalive-trailer-loop.mp4
+ffmpeg -i ad.mp4 -c:v libx264 -preset slow -crf 22 -maxrate 5M -bufsize 10M -pix_fmt yuv420p \
+       -c:a aac -b:a 160k -movflags +faststart cardalive-trailer.mp4
+ffmpeg -ss 6 -t 30 -i ad.mp4 -vf scale=640:-2 -c:v libx264 -preset slow -crf 27 -maxrate 900k \
+       -bufsize 1800k -pix_fmt yuv420p -an -movflags +faststart cardalive-trailer-loop.mp4
 ```
 
 `assets/video/where-we-are-now.mp4` is the early tabletop build recorded in-headset. Videos must be
@@ -114,7 +118,7 @@ ffmpeg -i raw.mp4 -vf scale=-2:720 -c:v libx264 -profile:v high -pix_fmt yuv420p
 
 Apart from the trailer, in-engine captures of the city are **not** on the site: several city source
 packs in the game repo are still marked `LICENSE_REVIEW_REQUIRED` (`CardAlive/Environments/ATTRIBUTION.md`).
-Clear those before publishing more. The trailer's two in-engine shots (0:15–0:20, Kishi in the alley
+Clear those before publishing more. The trailer's two in-engine shots (0:26–0:30 of the 40 s cut, Kishi in the alley
 and the city diorama) went live on 2026-10-13 on the owner's call while those packs were still under
 review. If a pack turns out to forbid it, replace the trailer with a cut without them.
 
