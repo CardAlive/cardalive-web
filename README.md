@@ -4,8 +4,14 @@ Marketing site for **CardAlive**, the mixed-reality platform for trading-card ga
 "Your cards. Your rules. Your world, alive." It has two audiences and two paths. **Publishers** go to
 `/publishers/` and can explore a pilot. **Players** join the waitlist on the home page. The two
 original prototypes (AR Card Battles and Kishi City) are presented as capability demonstrations of
-the technology, not as a separate TCG. Copy must not imply that every existing game can already be
-fully integrated.
+the technology, not as a separate TCG. The stance is partnership: CardAlive helps and partners with
+TCG publishers and does not compete with them, and the copy says so on every page. Copy must not
+imply that every existing game can already be fully integrated. "Every Card Game Deserves Another
+Dimension." is the signature line (`.hero__sub`), the largest text after the logo on both pages.
+
+Readability: light text sits on the moving city, so every text tier carries the `--ink` halo, body
+copy uses Cormorant at weight 500 in `--bone`, and each scene has a dark radial scrim behind its text.
+Keep new text on those, not on `--ash` or bare over the canvas.
 
 Live: https://cardalive.xyz (GitHub Pages, deploy from `master` / root). Plain HTML, CSS and JS,
 no build step.
