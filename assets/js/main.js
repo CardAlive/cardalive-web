@@ -1,9 +1,9 @@
 /* CardAlive — page behaviour (vanilla, no deps).
-   The page is a fixed stage of six scenes. One wheel flick, swipe or key
+   The page is a fixed stage of four scenes. One wheel flick, swipe or key
    press moves one scene; the camera flies there through the city while
    the text dissolves out and back in. Shared state for world.js lives
-   in window.CA: the camera keyframe, corruption, the light-span, the
-   Veil Dive and the fight. Everything here works without WebGL. */
+   in window.CA: the camera keyframe and the corruption level. Everything
+   here works without WebGL. The email forms live in forms.js. */
 (function () {
   'use strict';
 
@@ -11,8 +11,8 @@
   S.camKey = 'hero'; S.corr = 0.1; S.span = 0; S.veil = false; S.boss = 0; S.withdrawn = false; S.hit = 0;
 
   var params = new URLSearchParams(location.search);
-  var STILL = params.has('still');            // screenshots: no intro, no stagger, no auto-tour
-  var CAM = params.get('cam');                // screenshots: open on one scene, stop or scale
+  var STILL = params.has('still');            // screenshots: no intro, no stagger
+  var CAM = params.get('cam');                // screenshots: open on one scene
   // Full motion by default, even when the OS asks for reduced motion. Those visitors get a nav toggle to turn it off, remembered.
   var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   var motionPref = null;
@@ -71,43 +71,12 @@
   });
 
   /* ------------------------------------------------------------
-     Card: ring of runes, holographic tilt
-     ------------------------------------------------------------ */
-  (function () {
-    var ring = $('#ring-runes');
-    if (ring) {
-      var runes = 'ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ';
-      var out = '';
-      for (var k = 0; k < 36; k++) {
-        var a = (k / 36) * Math.PI * 2, r = 179;
-        var cx = 200 + Math.cos(a) * r, cy = 200 + Math.sin(a) * r;
-        out += '<text x="' + cx.toFixed(1) + '" y="' + cy.toFixed(1) + '" text-anchor="middle" dominant-baseline="middle" transform="rotate(' + (a * 180 / Math.PI + 90).toFixed(1) + ' ' + cx.toFixed(1) + ' ' + cy.toFixed(1) + ')">' + runes.charAt(k % runes.length) + '</text>';
-      }
-      ring.innerHTML = out;
-    }
-    var holo = $('#holo'); if (!holo) return;
-    var card = $('.holo__card', holo);
-    function set(px, py) {
-      card.style.setProperty('--ry', ((px - 0.5) * 26).toFixed(2) + 'deg');
-      card.style.setProperty('--rx', ((0.5 - py) * 22).toFixed(2) + 'deg');
-      card.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
-      card.style.setProperty('--my', (py * 100).toFixed(1) + '%');
-    }
-    holo.addEventListener('pointermove', function (e) {
-      var r = holo.getBoundingClientRect();
-      set(clamp((e.clientX - r.left) / r.width, 0, 1), clamp((e.clientY - r.top) / r.height, 0, 1));
-    });
-    holo.addEventListener('pointerenter', function () { sfx.shimmer(); });
-    holo.addEventListener('pointerleave', function () { set(0.5, 0.5); });
-  })();
-
-  /* ------------------------------------------------------------
      Scenes
      ------------------------------------------------------------ */
   var scenes = $$('.scene');
   var ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
   var index = -1, locked = false;
-  var hud = $('#hud'), hint = $('#hint');
+  var hint = $('#hint');
   if (window.matchMedia('(pointer: coarse)').matches) $('span', hint).textContent = 'Swipe';
 
   var railEl = $('#rail');
@@ -141,7 +110,6 @@
       from.classList.add(dir > 0 ? 'is-out-up' : 'is-out-down');
       from.setAttribute('aria-hidden', 'true');
       from.inert = true;
-      leave(from);
       (function (el) { setTimeout(function () { el.classList.remove('is-out-up', 'is-out-down'); }, 900); })(from);
     }
     index = i;
@@ -153,13 +121,11 @@
     to.scrollTop = 0;
     S.camKey = to.dataset.cam;
     S.corrTarget = parseFloat(to.dataset.corr || '0.1');
-    enter(to);
     teaserSync();
 
     railItems.forEach(function (li, k) { li.classList.toggle('is-here', k === i); });
     document.body.dataset.scene = to.id;
     hint.classList.toggle('is-on', i === 0);
-    hud.classList.toggle('is-on', to.id === 'city' || to.id === 'maw');
     if (!opts.silent) {
       try { history.replaceState(null, '', i === 0 ? location.pathname + location.search : '#' + to.id); } catch (err) {}
       sfx.whoosh(dir);
@@ -169,31 +135,6 @@
   }
   function next() { go(index + 1); }
   function prev() { go(index - 1); }
-
-  function enter(sc) {
-    if (sc.id === 'kishi') typeLine($('#sys-line'));
-    if (sc.id === 'scales') setScale(currentScale);
-    if (sc.id === 'city') startTour(CAM && stopIndex(CAM) >= 0 ? stopIndex(CAM) : 0);
-    if (sc.id === 'maw') S.boss = 1;
-  }
-  function leave(sc) {
-    if (sc.id === 'scales') { setVeil(false); document.body.classList.remove('is-diorama'); }
-    if (sc.id === 'city') stopTour();
-    if (sc.id === 'maw') S.boss = 0;
-  }
-
-  /* System window: type the line out once */
-  function typeLine(el) {
-    if (!el || el.dataset.done || STILL || reduceMotion) return;
-    el.dataset.done = '1';
-    var full = el.textContent; el.textContent = ' '; el.classList.add('is-typing');
-    var n = 0;
-    setTimeout(function step() {
-      n++; el.textContent = full.slice(0, n);
-      if (n % 2 === 0) sfx.blip();
-      if (n < full.length) setTimeout(step, 32); else el.classList.remove('is-typing');
-    }, 1100);
-  }
 
   /* ------------------------------------------------------------
      Input: wheel, touch, keys. One gesture, one scene.
@@ -256,320 +197,37 @@
   function sceneIndex(id) { for (var i = 0; i < scenes.length; i++) if (scenes[i].id === id) return i; return -1; }
 
   /* ------------------------------------------------------------
-     The Pilgrimage: an auto-tour of the road north
-     ------------------------------------------------------------ */
-  var STOPS = [
-    { id: 'lantern', name: 'Lantern Row', places: "Ropewalk · Cooper's Passage · Tanner's Lane", text: 'The last streets where the lamps still burn. Kishi runs ahead. <q>This way. Stay close.</q>', corr: 0.10 },
-    { id: 'market', name: 'Weighhouse Market', places: 'Market Square · Weigh Alley · the Market Hall · the Corner Inn', text: 'Where the city once weighed its trade. The square is quiet. Too quiet.', corr: 0.20 },
-    { id: 'quay', name: 'Assize Quay', places: 'the Weigh Tower · the Archive · the Assize Hall · the Bridge Gate', text: 'The old courts of the city, and the gate to the only road north.', corr: 0.30 },
-    { id: 'underline', name: 'The Underline', places: 'A transit trench · 18 metres deep', text: 'It cuts the city east to west. Its people live in the walls.', corr: 0.40 },
-    { id: 'span', name: 'The Great Span', places: 'A 51-metre chasm · a fallen arch', text: 'Carry Kishi over the gap in your hand, and a dead bridge of hard light wakes beneath you.', corr: 0.52, span: true, dwell: 7600 },
-    { id: 'cinder', name: 'Cinder Close', places: 'Bridgehead Court · Ash Lane · the Throat', text: 'Ash in the gutters. Roots in the stone. Here the corruption has teeth.', corr: 0.70 },
-    { id: 'plaza', name: 'Cathedral Plaza', places: 'the Lych House · the Lych arch', text: 'The last threshold. Doors shut. Windows burning.', corr: 0.86 },
-    { id: 'cathedral', name: 'The Cathedral', places: 'Epicentre', text: 'The heart of the city, and the heart of the rot.', corr: 1.00, prompt: true },
-  ];
-  function stopIndex(id) { for (var i = 0; i < STOPS.length; i++) if (STOPS[i].id === id) return i; return -1; }
-
-  var routeEl = $('#route');
-  STOPS.forEach(function (st, i) {
-    var li = document.createElement('li');
-    li.innerHTML = '<button type="button" data-stop="' + i + '"><span>' + st.name + '</span></button><i class="route__fill"></i>';
-    routeEl.appendChild(li);
-  });
-  var routeItems = $$('li', routeEl);
-  routeEl.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-stop]');
-    if (!b) return;
-    touring = false;
-    setStop(parseInt(b.dataset.stop, 10));
-    sfx.tick();
-  });
-
-  var caption = $('.pilgrim__caption');
-  var stopName = $('#stop-name'), stopPlaces = $('#stop-places'), stopText = $('#stop-text');
-  var spanMeter = $('#spanmeter'), spanBar = $('#span-bar'), spanVal = $('#span-val'), stopPrompt = $('#stop-prompt');
-  var touring = false, tourTimer = null, spanRaf = null, swapTimer = null;
-  stopPrompt.setAttribute('role', 'button'); stopPrompt.tabIndex = 0;
-  stopPrompt.addEventListener('click', function () { go(sceneIndex('maw')); });
-  stopPrompt.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); go(sceneIndex('maw')); } });
-
-  function setStop(i, first) {
-    var st = STOPS[i];
-    S.camKey = st.id;
-    S.corrTarget = st.corr;
-    if (i < stopIndex('span')) setSpan(0);
-    else if (!st.span) setSpan(1);
-    routeItems.forEach(function (li, k) {
-      li.classList.toggle('is-here', k === i);
-      li.classList.toggle('is-past', k < i);
-      li.classList.remove('is-touring');
-    });
-    if (touring && !STILL && i < STOPS.length - 1) {
-      var li = routeItems[i];
-      li.style.setProperty('--dwell', (st.dwell || 4800) + 'ms');
-      void li.offsetWidth;
-      li.classList.add('is-touring');
-    }
-    function fill() {
-      stopName.textContent = st.name;
-      stopPlaces.textContent = st.places;
-      stopText.innerHTML = st.text;
-      spanMeter.hidden = !st.span;
-      stopPrompt.hidden = !st.prompt;
-      caption.classList.remove('is-swap');
-    }
-    clearTimeout(swapTimer);
-    if (first || STILL || reduceMotion) fill();
-    else { caption.classList.add('is-swap'); swapTimer = setTimeout(fill, 420); }
-    if (st.span) buildSpan();
-    clearTimeout(tourTimer);
-    if (touring && !STILL && i < STOPS.length - 1) {
-      tourTimer = setTimeout(function () { setStop(i + 1); }, st.dwell || 4800);
-    }
-  }
-  function startTour(i) { touring = !STILL; setStop(i, true); }
-  function stopTour() { touring = false; clearTimeout(tourTimer); cancelAnimationFrame(spanRaf); }
-
-  function setSpan(p) {
-    cancelAnimationFrame(spanRaf);
-    S.span = p;
-    spanBar.style.setProperty('--p', p.toFixed(3));
-    spanVal.textContent = Math.round(p * 100) + '%';
-  }
-  function buildSpan() {
-    setSpan(0);
-    if (STILL || reduceMotion) { setSpan(STILL ? 0.73 : 1); return; }
-    var t0 = performance.now() + 1600, dur = 4200, lastPlank = -1;
-    (function step(t) {
-      var p = clamp((t - t0) / dur, 0, 1);
-      S.span = p;
-      spanBar.style.setProperty('--p', p.toFixed(3));
-      spanVal.textContent = Math.round(p * 100) + '%';
-      var plank = Math.floor(p * 11);
-      if (plank !== lastPlank && p > 0) { lastPlank = plank; sfx.plank(); }
-      if (p < 1) spanRaf = requestAnimationFrame(step);
-    })(performance.now());
-  }
-
-  /* ------------------------------------------------------------
-     Scales + Veil Dive
-     ------------------------------------------------------------ */
-  var currentScale = 'table';
-  function inScales() { return scenes[index] && scenes[index].id === 'scales'; }
-  function setScale(s) {
-    currentScale = s;
-    $$('.scales__tabs button').forEach(function (o) { o.setAttribute('aria-selected', String(o.dataset.scale === s)); });
-    $$('.scales__panes p').forEach(function (p) { p.hidden = p.dataset.pane !== s; });
-    if (inScales()) S.camKey = 'scale-' + s;
-    document.body.classList.toggle('is-diorama', s === 'diorama' && inScales());
-  }
-  $$('.scales__tabs button').forEach(function (b) {
-    b.addEventListener('click', function () { setScale(b.dataset.scale); sfx.tick(); });
-  });
-  var veilBtn = $('#veil-btn'), veilLabel = $('#veil-label');
-  function setVeil(on) {
-    S.veil = on;
-    document.body.classList.toggle('is-veil', on);
-    veilBtn.setAttribute('aria-pressed', String(on));
-    veilLabel.textContent = on ? 'Surface — leave the Veil' : 'Lean in — Veil Dive';
-  }
-  veilBtn.addEventListener('click', function () { setVeil(!S.veil); if (S.veil) sfx.woom(); else sfx.tick(); });
-
-  /* ------------------------------------------------------------
-     The Maw — a taste of the fight.
-     Jaw withdraws at 35% and never dies, as in the tutorial.
-     ------------------------------------------------------------ */
-  (function () {
-    var JAW_MAX = 140, KISHI_MAX = 85;
-    var jaw, kishi, charge, riposte, busy, done;
-    var jawBar = $('#jaw-hp'), jawLag = $('#jaw-lag'), kBar = $('#kishi-hp');
-    var log = $('#fight-log'), layer = $('#dmg-layer'), fight = $('#fight');
-    var ult = $('.art--ult'), ultCharge = $('#ult-charge'), banner = $('#banner');
-    var arts = $$('.art');
-    var names = { slash: 'Rending Slash', cry: "Oathbreaker's Cry", cyclone: 'Abyssal Cyclone' };
-
-    function reset() {
-      jaw = JAW_MAX; kishi = KISHI_MAX; charge = 0; riposte = false; busy = false; done = false;
-      S.withdrawn = false;
-      banner.classList.remove('is-on'); banner.setAttribute('aria-hidden', 'true');
-      render(); log.innerHTML = 'Jaw stirs in the wound. Choose an art.';
-      arts.forEach(function (a) { a.disabled = false; });
-      ult.disabled = true;
-    }
-    function render() {
-      jawBar.style.width = (jaw / JAW_MAX * 100) + '%';
-      jawLag.style.width = (jaw / JAW_MAX * 100) + '%';
-      kBar.style.width = (kishi / KISHI_MAX * 100) + '%';
-      ultCharge.style.width = Math.min(1, charge / 2) * 100 + '%';
-      ult.disabled = done || charge < 2;
-    }
-    function pop(text, cls) {
-      var d = document.createElement('span');
-      d.className = 'dmg ' + (cls || '');
-      d.textContent = text;
-      d.style.left = (30 + Math.random() * 40) + '%';
-      d.style.top = (20 + Math.random() * 30) + '%';
-      layer.appendChild(d);
-      setTimeout(function () { d.remove(); }, 1200);
-    }
-    function slash(ultimate) {
-      var s = document.createElement('i');
-      s.className = 'slash' + (ultimate ? ' slash--ult' : '');
-      s.style.top = (30 + Math.random() * 40) + '%';
-      layer.appendChild(s);
-      setTimeout(function () { s.remove(); }, 500);
-    }
-    function shake() {
-      if (reduceMotion) return;
-      fight.classList.remove('is-shake'); void fight.offsetWidth; fight.classList.add('is-shake');
-    }
-    function flash() {
-      if (reduceMotion) return;
-      var f = $('.flash'); f.classList.remove('is-on'); void f.offsetWidth; f.classList.add('is-on');
-    }
-
-    arts.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        if (busy || done) return;
-        busy = true;
-        var art = btn.dataset.art;
-        var dmg = Math.round(parseInt(btn.dataset.dmg, 10) * (riposte ? 1.5 : 1));
-        var wasRiposte = riposte; riposte = false;
-        jaw = Math.max(0, jaw - dmg);
-        if (art === 'cyclone') charge = 0; else charge++;
-        slash(art === 'cyclone'); shake(); flash();
-        pop('−' + dmg, art === 'cyclone' ? 'dmg--ult' : (wasRiposte ? 'dmg--riposte' : ''));
-        sfx.hit(art === 'cyclone' ? 2 : wasRiposte ? 1.5 : 1);
-        S.hit = performance.now();
-        log.innerHTML = '<b>' + names[art] + '</b>' + (wasRiposte ? ' &mdash; <span class="parry">Riposte &times;1.5</span>' : '') + ' tears into Jaw for ' + dmg + '.';
-        render();
-
-        if (jaw <= JAW_MAX * 0.35) {
-          done = true;
-          arts.forEach(function (a) { a.disabled = true; });
-          setTimeout(function () {
-            S.withdrawn = true;
-            log.innerHTML = 'Jaw shrieks and folds back into the wound.';
-            banner.classList.add('is-on'); banner.setAttribute('aria-hidden', 'false');
-            sfx.withdraw();
-            busy = false;
-          }, 800);
-          return;
-        }
-
-        setTimeout(function () {
-          if (Math.random() < 0.35) {
-            riposte = true;
-            log.innerHTML = 'Jaw lunges &mdash; <span class="parry">Kishi parries!</span> Your next art ripostes for &times;1.5.';
-            pop('PARRY', 'dmg--riposte');
-            sfx.parry();
-          } else {
-            var hurt = 6 + Math.floor(Math.random() * 7);
-            kishi = Math.max(1, kishi - hurt);
-            log.innerHTML = "Jaw's maw closes on Kishi for " + hurt + '.';
-            shake(); sfx.hit(0.6);
-          }
-          render();
-          busy = false;
-        }, 750);
-      });
-    });
-    $('#fight-again').addEventListener('click', function () { reset(); sfx.tick(); });
-    reset();
-  })();
-
-  /* ------------------------------------------------------------
-     Email forms (the lantern, the raven). There is no backend:
-     FormSubmit relays each address to the inbox in the form's action.
-     ------------------------------------------------------------ */
-  (function () {
-    var INBOX = 'cardalive@protonmail.com';
-    var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-    $$('form[data-raven]').forEach(function (form) {
-      var input = $('input[type="email"]', form), send = $('button[type="submit"]', form), status = $('.raven__status', form);
-      var busy = false;
-
-      function say(msg, err) {
-        status.textContent = msg;
-        status.classList.toggle('is-err', !!err);
-      }
-      function done(addr) {
-        $$('[data-done]', form).forEach(function (el) { el.textContent = el.dataset.done.replace('{email}', addr); });
-        status.classList.remove('is-err');
-        form.classList.add('is-sent');
-        input.blur();
-        sfx.shimmer();
-      }
-      function fail() {
-        say('The raven was lost. Try again, or write to ', true);
-        var a = document.createElement('a');
-        a.href = 'mailto:' + INBOX; a.textContent = INBOX;
-        status.appendChild(a);
-        status.appendChild(document.createTextNode('.'));
-        sfx.tick();
-      }
-
-      input.addEventListener('input', function () { if (status.classList.contains('is-err')) say(''); });
-
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        if (busy || form.classList.contains('is-sent')) return;
-        var addr = input.value.trim();
-        if (!EMAIL.test(addr)) { say('That does not look like an email address.', true); input.focus(); sfx.tick(); return; }
-
-        var data = {};
-        new FormData(form).forEach(function (v, k) { data[k] = v; });
-        if (data._honey) { done(addr); return; }  // only a bot fills the hidden field
-        data.email = addr;
-        data._replyto = addr;
-        data._subject = form.dataset.subject + ': ' + addr;
-        data._template = 'table';
-
-        busy = true; send.disabled = true; form.classList.add('is-busy');
-        say('Sending\u2026');
-        var ctrl = window.AbortController ? new AbortController() : null;
-        var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 15000);
-
-        fetch(form.action.replace('://formsubmit.co/', '://formsubmit.co/ajax/'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify(data),
-          signal: ctrl ? ctrl.signal : undefined
-        })
-          .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
-          .then(function (res) {
-            // until the inbox confirms the relay, FormSubmit holds submissions (and says so); they arrive once it is confirmed
-            var held = /activat/i.test(res.j.message || '');
-            if (res.ok && (String(res.j.success) === 'true' || held)) done(addr); else fail();
-          }, fail)
-          .then(function () {
-            clearTimeout(timer);
-            busy = false; send.disabled = false; form.classList.remove('is-busy');
-          });
-      });
-    });
-  })();
-
-  /* ------------------------------------------------------------
      Footage: each [data-reel] button opens the dialog it names.
+     A dialog holds a <video>, or a [data-yt] box that gets its
+     YouTube player only while open (closing it stops playback).
      The page's own sound ducks while a reel plays.
      ------------------------------------------------------------ */
   (function () {
+    function ytFrame(box) {
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + box.dataset.yt + '?autoplay=1&rel=0&playsinline=1';
+      f.title = box.dataset.ytTitle || 'CardAlive video';
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      box.appendChild(f);
+    }
     $$('.reel').forEach(function (dlg) {
-      var vid = $('video', dlg);
-      function close() { vid.pause(); if (dlg.close) dlg.close(); else { dlg.removeAttribute('open'); closed(); } }
-      function closed() { vid.pause(); sfx.duck(false); teaserSync(); }
+      var vid = $('video', dlg), yt = $('[data-yt]', dlg);
+      function stop() { if (vid) vid.pause(); if (yt) yt.textContent = ''; }
+      function close() { stop(); if (dlg.close) dlg.close(); else { dlg.removeAttribute('open'); closed(); } }
+      function closed() { stop(); sfx.duck(false); teaserSync(); }
       $('.reel__close', dlg).addEventListener('click', close);
       dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
       dlg.addEventListener('close', closed);
     });
     $$('[data-reel]').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var dlg = document.getElementById(btn.dataset.reel), vid = $('video', dlg);
+        var dlg = document.getElementById(btn.dataset.reel), vid = $('video', dlg), yt = $('[data-yt]', dlg);
         if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
         sfx.duck(true); teaserSync();
-        var p = vid.play(); if (p && p.catch) p.catch(function () {});
+        if (yt && !yt.firstChild) ytFrame(yt);
+        if (vid) { var p = vid.play(); if (p && p.catch) p.catch(function () {}); }
       });
     });
   })();
@@ -664,13 +322,7 @@
       },
       whoosh: function (dir) { if (ok()) burst(dir > 0 ? 300 : 1400, 0.9, 1.1, 0.16, dir > 0 ? 1400 : 300); },
       tick: function () { if (ok()) tone('triangle', 1200, 900, 0.06, 0.05); },
-      blip: function () { if (ok()) tone('square', 2400, 2300, 0.02, 0.012); },
       shimmer: function () { if (!ok()) return; [880, 1320, 1760].forEach(function (f, i) { setTimeout(function () { tone('sine', f, f * 1.01, 0.6, 0.04); }, i * 60); }); },
-      plank: function () { if (ok()) tone('sine', 660 + Math.random() * 200, 990, 0.25, 0.05); },
-      woom: function () { if (!ok()) return; tone('sine', 420, 48, 1.6, 0.5); tone('sawtooth', 210, 40, 1.2, 0.08); burst(300, 0.5, 1.4, 0.2); },
-      hit: function (k) { if (!ok()) return; burst(1800, 0.8, 0.18 * k, 0.35); tone('sine', 140 * k, 40, 0.35, 0.5); },
-      parry: function () { if (!ok()) return; tone('triangle', 2200, 1900, 0.5, 0.18); tone('sine', 3300, 3100, 0.4, 0.08); },
-      withdraw: function () { if (!ok()) return; tone('sawtooth', 160, 30, 2.6, 0.16); burst(220, 0.4, 2.4, 0.3); setTimeout(bell, 900); },
       thunder: function () { if (ok()) burst(90, 0.3, 2.8, 0.45); }
     };
   })();
@@ -682,17 +334,14 @@
     soundBtn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
   });
   document.addEventListener('ca:thunder', function () { sfx.thunder(); });
+  document.addEventListener('ca:sfx', function (e) { if (sfx[e.detail]) sfx[e.detail](); });
 
   /* ------------------------------------------------------------
-     Per-frame: corruption meter, flight cue
+     Per-frame: corruption easing, flight cue
      ------------------------------------------------------------ */
-  var corrVal = $('#corr-val'), corrBar = $('#corr-bar'), lastCorr = '';
   S.corrTarget = 0.1;
   (function frame() {
     S.corr += (S.corrTarget - S.corr) * 0.05;
-    var shown = S.withdrawn ? Math.max(0.1, S.corr - 0.35) : S.corr;
-    var txt = shown.toFixed(2);
-    if (txt !== lastCorr) { corrVal.textContent = txt; corrBar.style.width = (shown * 100).toFixed(1) + '%'; lastCorr = txt; }
     document.body.classList.toggle('is-flying', !!S.flying);
     requestAnimationFrame(frame);
   })();
@@ -718,15 +367,9 @@
 
   scenes.forEach(function (sc) { sc.setAttribute('aria-hidden', 'true'); sc.inert = true; });
   var start = 0;
-  if (CAM) {
-    if (sceneIndex(CAM) >= 0) start = sceneIndex(CAM);
-    else if (stopIndex(CAM) >= 0) start = sceneIndex('city');
-    else if (CAM.indexOf('scale-') === 0) { start = sceneIndex('scales'); currentScale = CAM.slice(6); }
-  } else if (location.hash) {
-    start = Math.max(0, sceneIndex(location.hash.slice(1)));
-  }
+  if (CAM) start = Math.max(0, sceneIndex(CAM));
+  else if (location.hash) start = Math.max(0, sceneIndex(location.hash.slice(1)));
   go(start, { silent: true, force: true });
   S.corr = S.corrTarget;
-  if (CAM && params.has('veil')) setVeil(true);
   S.snap = true;
 })();

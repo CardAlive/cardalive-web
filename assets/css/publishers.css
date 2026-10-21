@@ -1,0 +1,106 @@
+/* ============================================================
+   CardAlive /publishers/ — a plain scrolling page on top of
+   style.css (tokens, buttons, type, panels, the demo cards).
+   No 3D city here: a still sky and the skyline instead.
+   ============================================================ */
+
+html, body { height: auto; overflow: visible; overscroll-behavior: auto; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+body.page { min-height: 100vh; }
+
+.page-sky {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 50% 18%, rgba(163, 91, 255, 0.3), transparent 70%),
+    radial-gradient(34% 26% at 70% 70%, rgba(224, 36, 79, 0.16), transparent 70%),
+    linear-gradient(180deg, #05060f 0%, #110a1c 50%, #1d0f28 80%, #07060b 100%);
+}
+.page-sky::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 40vh; opacity: 0.55; background: url('../img/skyline.svg') bottom center / auto 100% repeat-x; }
+.page .vignette { opacity: 0.6; }
+
+.page .nav { background: linear-gradient(180deg, rgba(7, 6, 11, 0.92), rgba(7, 6, 11, 0.55) 70%, transparent); }
+.page .nav__brand { display: inline-flex; }
+
+main, .p-foot { position: relative; z-index: 5; }
+
+/* Hero */
+.p-hero {
+  min-height: min(86vh, 860px); padding: 120px var(--gut) 60px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; text-align: center;
+}
+.p-title {
+  font-family: var(--display); font-weight: 900; line-height: 1.04; letter-spacing: 0.01em;
+  font-size: clamp(40px, 6.6vw, 104px); color: var(--bone);
+  text-shadow: 0 0 40px rgba(163, 91, 255, 0.35), 0 2px 0 rgba(0, 0, 0, 0.6);
+}
+.p-title em { font-style: normal; background: linear-gradient(100deg, var(--gold), #fff3d6 40%, var(--violet) 80%); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none; filter: drop-shadow(0 0 22px rgba(163, 91, 255, 0.45)); }
+.p-lede { max-width: 40em; font-size: clamp(18px, 1.5vw, 23px); line-height: 1.5; color: var(--bone-dim); text-shadow: 0 1px 10px rgba(0, 0, 0, 0.9); }
+.p-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 8px; }
+
+/* Sections */
+.p-section { width: min(1120px, 100%); margin: 0 auto; padding: clamp(56px, 9vh, 110px) var(--gut) 0; }
+.p-section > .lede { max-width: 42em; }
+
+.p-demos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 32px); margin-top: 32px; }
+.p-demo {
+  display: flex; flex-direction: column; overflow: hidden;
+  background: linear-gradient(160deg, rgba(20, 14, 30, 0.82), rgba(8, 6, 12, 0.78));
+  border: 1px solid rgba(231, 194, 122, 0.22); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+.vframe { position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: #000; border: 0; }
+.vframe img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--ease); }
+button.vframe:hover img, button.vframe:focus-visible img { transform: scale(1.04); }
+button.vframe:hover .demo__play, button.vframe:focus-visible .demo__play { transform: scale(1.1); box-shadow: 0 0 36px rgba(231, 194, 122, 0.7); }
+.p-demo__body { display: flex; flex-direction: column; gap: 6px; padding: 18px 22px 22px; }
+
+.p-caps { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+.p-cap { padding: 22px 20px; border: 1px solid rgba(231, 194, 122, 0.18); background: rgba(10, 7, 16, 0.7); display: flex; flex-direction: column; gap: 10px; }
+.p-cap h3 { font-family: var(--display); font-weight: 700; font-size: 17px; letter-spacing: 0.03em; line-height: 1.25; color: var(--bone); }
+.p-cap p { font-size: 17px; line-height: 1.45; color: var(--bone-dim); flex: 1; }
+.p-cap__src { font-family: var(--sys); font-size: 10px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); }
+
+.p-where { margin-top: 28px; }
+.p-where h3 { font-family: var(--sys); font-size: 12px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+.p-where p { font-size: clamp(18px, 1.4vw, 21px); line-height: 1.5; color: var(--bone); max-width: 52em; }
+
+/* Pilot form */
+.pilot { margin-top: 28px; max-width: 760px; }
+.pilot__fields { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 20px; }
+.pilot__field { display: flex; flex-direction: column; gap: 8px; }
+.pilot__field--wide { grid-column: 1 / -1; }
+.pilot__field > span { font-family: var(--sys); font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--bone-dim); }
+.pilot__field b { color: var(--gold); font-weight: 600; }
+.pilot__input {
+  width: 100%; padding: 13px 14px; border: 1px solid rgba(231, 194, 122, 0.35); background: rgba(7, 6, 11, 0.72); outline: none;
+  font-family: var(--sys); font-weight: 500; font-size: 16px; letter-spacing: 0.03em; color: var(--bone);
+  transition: border-color 0.25s, box-shadow 0.25s; resize: vertical;
+}
+.pilot__input::placeholder { color: #7d7588; }
+.pilot__input:focus { border-color: var(--gold); box-shadow: 0 0 24px rgba(231, 194, 122, 0.2); }
+.pilot__send { justify-self: start; }
+.pilot__done { display: none; font-family: var(--display); font-weight: 900; font-size: clamp(24px, 2.6vw, 34px); color: var(--bone); }
+.pilot.is-sent .pilot__fields { display: none; }
+.pilot.is-sent .pilot__done { display: block; }
+.pilot .raven__status { margin-top: 14px; }
+
+/* Footer */
+.p-foot { padding: clamp(60px, 10vh, 120px) var(--gut) 28px; text-align: center; }
+.p-foot__players { font-family: var(--sys); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bone-dim); margin-bottom: 18px; }
+.p-foot__players a { color: var(--gold); text-underline-offset: 0.3em; margin-left: 6px; }
+.p-foot .fine { position: static; }
+.p-foot .fine a { color: var(--bone-dim); }
+
+@media (max-width: 1000px) {
+  .nav__link--wide { display: none; }
+  .p-caps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .p-demos { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .p-hero { padding-top: 100px; min-height: auto; }
+  .p-ctas .btn { font-size: 13px; padding: 1.05em 1.6em; }
+  .p-caps { grid-template-columns: 1fr; }
+  .pilot__fields { grid-template-columns: 1fr; }
+  .pilot__send { justify-self: stretch; }
+}
