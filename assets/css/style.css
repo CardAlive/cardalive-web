@@ -408,6 +408,7 @@ q { quotes: '\201C' '\201D'; font-style: italic; color: var(--bone); }
 .demos__pub { margin-top: clamp(18px, 3vh, 28px); }
 .demos__pub a, .hero__players a { color: var(--gold); text-decoration-thickness: 1px; text-underline-offset: 0.3em; margin-left: 6px; white-space: nowrap; }
 .demos__pub a:hover, .hero__players a:hover { color: #fff3d6; }
+.art-note { max-width: 46em; margin-top: 14px; font-size: 13px; font-style: italic; line-height: 1.45; color: #b3abbf; text-shadow: var(--ink); text-wrap: balance; }
 /* ---------------------------------------------------------------
    VI. Finale
    --------------------------------------------------------------- */
