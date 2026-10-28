@@ -1,6 +1,6 @@
 ---
 name: CardAlive
-description: A night city, one typeface, gold for what you can press. The mixed-reality platform for trading-card games.
+description: A poster set inside a HUD, over a night city. Condensed capitals, an italic voice, brackets on what frames, chamfers on what you press, gold for actions. The mixed-reality platform for trading-card games.
 colors:
   night: "oklch(0.14 0.02 285)"
   night-2: "oklch(0.185 0.022 285)"
@@ -18,172 +18,211 @@ colors:
   video-black: "#000"
 typography:
   signature:
-    fontFamily: "Switzer, Segoe UI, system-ui, sans-serif"
-    fontSize: "clamp(2.5rem, 1.1rem + 3.1vw, 4.75rem)"
-    fontWeight: 700
-    lineHeight: 1.02
-    letterSpacing: "-0.02em"
+    fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
+    fontSize: "fitted to the width (fit.js), at most 24vh"
+    fontWeight: 800
+    fontStretch: "62%"
+    lineHeight: 0.84
+    textTransform: uppercase
+  kick:
+    fontFamily: "Newsreader, Georgia, serif"
+    fontSize: "clamp(1.625rem, 0.9rem + 2.2vw, 3.5rem)"
+    fontStyle: italic
+    fontWeight: 400
+    lineHeight: 1.05
   headline:
-    fontFamily: "Switzer, Segoe UI, system-ui, sans-serif"
-    fontSize: "clamp(2rem, 1.25rem + 2.1vw, 3.5rem)"
-    fontWeight: 700
-    lineHeight: 1.06
-    letterSpacing: "-0.015em"
+    fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
+    fontSize: "clamp(2.75rem, 1.2rem + 4.4vw, 6rem)"
+    fontWeight: 800
+    fontStretch: "62%"
+    lineHeight: 0.88
+    textTransform: uppercase
   title:
-    fontFamily: "Switzer, Segoe UI, system-ui, sans-serif"
-    fontSize: "clamp(1.25rem, 1.05rem + 0.55vw, 1.625rem)"
-    fontWeight: 600
-    lineHeight: 1.2
-    letterSpacing: "-0.01em"
+    fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
+    fontSize: "clamp(1.75rem, 1.1rem + 1.6vw, 2.75rem)"
+    fontWeight: 800
+    fontStretch: "62%"
+    lineHeight: 0.92
+    textTransform: uppercase
   lede:
-    fontFamily: "Switzer, Segoe UI, system-ui, sans-serif"
+    fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
     fontSize: "clamp(1.125rem, 1.02rem + 0.3vw, 1.3125rem)"
     fontWeight: 400
     lineHeight: 1.5
   body:
-    fontFamily: "Switzer, Segoe UI, system-ui, sans-serif"
+    fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
     fontSize: "1.0625rem"
     fontWeight: 400
     lineHeight: 1.55
-  label:
-    fontFamily: "Switzer, Segoe UI, system-ui, sans-serif"
-    fontSize: "0.9375rem"
-    fontWeight: 500
-    lineHeight: 1.4
-  input:
-    fontFamily: "Switzer, Segoe UI, system-ui, sans-serif"
-    fontSize: "16px"
-    fontWeight: 400
-    lineHeight: 1.4
-  chip:
-    fontFamily: "Switzer, Segoe UI, system-ui, sans-serif"
+  hud:
+    fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
+    fontSize: "12px"
+    fontWeight: 600
+    fontStretch: "125%"
+    letterSpacing: "0.14em"
+    textTransform: uppercase
+  button:
+    fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
     fontSize: "13px"
     fontWeight: 600
-    lineHeight: 1
+    fontStretch: "125%"
+    letterSpacing: "0.12em"
+    textTransform: uppercase
+  input:
+    fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
+    fontSize: "18px"
+    fontWeight: 400
   fine:
-    fontFamily: "Switzer, Segoe UI, system-ui, sans-serif"
+    fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
     fontSize: "13px"
     fontWeight: 400
     lineHeight: 1.5
 rounded:
-  focus: "2px"
-  control: "4px"
-  surface: "8px"
+  everything: "0"
+  chamfer: "7px, two corners (top-left, bottom-right)"
 spacing:
   gutter: "clamp(16px, 4.5vw, 72px)"
-  rail: "132px"
+  rail: "150px"
 components:
   button-primary:
     backgroundColor: "{colors.gold}"
     textColor: "{colors.gold-ink}"
-    rounded: "{rounded.control}"
-    height: "50px"
-    padding: "0 22px"
+    shape: chamfer
+    height: "52px"
+    padding: "0 24px"
   button-primary-hover:
     backgroundColor: "{colors.gold-hi}"
   button-line:
-    backgroundColor: "{colors.night}"
+    backgroundColor: "{colors.night} / 0.6"
     textColor: "{colors.bone}"
-    rounded: "{rounded.control}"
-    height: "50px"
-    padding: "0 22px"
-  field:
-    backgroundColor: "{colors.night}"
-    textColor: "{colors.bone}"
-    rounded: "{rounded.control}"
+    border: "1px {colors.line}, brackets {colors.bone-2}, gold on hover"
     height: "52px"
-  frame:
-    backgroundColor: "{colors.video-black}"
-    rounded: "{rounded.surface}"
-  chip:
-    backgroundColor: "{colors.night}"
+  field:
+    backgroundColor: "{colors.night} / 0.6"
     textColor: "{colors.bone}"
-    rounded: "{rounded.control}"
-    height: "34px"
+    border: "underline {colors.bone-3}, gold on focus"
+    height: "56px"
   panel:
-    backgroundColor: "{colors.night-2}"
-    textColor: "{colors.bone}"
-    rounded: "{rounded.surface}"
-    padding: "30px 32px 32px"
+    backgroundColor: "#000 under the footage"
+    border: "1px {colors.line}, brackets inset 10px"
+  hudbox:
+    backgroundColor: "{colors.night-2} / 0.9"
+    border: "1px {colors.line}, brackets {colors.bone-2}, a header bar of HUD labels"
+  chip:
+    backgroundColor: "{colors.night} / 0.85"
+    shape: chamfer
+    height: "34px"
 ---
 
 # CardAlive design
 
 ## Overview
 
-A night city with plain type set over it. The home page is a fixed stage of four scenes over a
-real-time gothic city (`assets/js/world.js`); the city carries the mood, so the interface stays
-quiet: one typeface, two surfaces, and gold only on what you can press. `/publishers/` is a plain
-scrolling page in the same world: a still frame of the city, night ink below, and the pilot form on a
-slightly raised band.
+A poster set inside a HUD. The home page is a fixed stage of four scenes over a real-time gothic city
+(`assets/js/world.js`); each scroll, swipe or key moves one scene and the camera flies there. The
+interface reads like a viewfinder over that flight: brackets on the corners of the screen, a scan
+line on every cut, a readout of where the camera is, a rail with a sliding marker. Type does the
+poster work: huge condensed capitals with an italic serif line on top. `/publishers/` is a plain
+scrolling page in the same world: a still frame of the city under the same poster hero, night ink
+below, and the pilot form on a slightly raised band.
 
 The page is for persuasion. Publishers should leave knowing CardAlive partners with them and that
 their game stays theirs. Players should leave on the waitlist. "Every Card Game Deserves Another
-Dimension." is the largest text after the logo on both pages.
+Dimension." is the largest text on both pages: no other line may be set bigger.
 
 ## Colors
 
 - **Night** (`night`, `night-2`, `night-3`): the ground and the surfaces on it. Violet-tinted to
-  sit with the city's sky. `night-2` is the one raised surface (panels, the pilot band, the dialog).
-- **Bone** (`bone`, `bone-2`, `bone-3`): text. `bone-2` for body copy and ledes, `bone-3` for fine
-  print, meta lines, placeholders and the inactive rail. All pass 4.5:1 on night.
-- **Gold**: buttons, focus rings, the current rail mark, link underlines, step numbers, and the
-  "Your game. Our technology." line. Text on gold is `gold-ink`, never white.
+  sit with the city's sky. `night-2` is the one raised surface (the waitlist box, the pilot band, the
+  dialog).
+- **Bone** (`bone`, `bone-2`, `bone-3`): text, brackets and HUD lines. `bone-2` for body copy, ledes
+  and labels, `bone-3` for fine print, the readout and inactive rail numbers.
+- **Gold**: buttons, chips on hover, focus rings, the rail marker and current number, the nav
+  diamond, the bracket colour on hover and in flight, the waitlist heading, "Your game. Our
+  technology." and the diamonds in the band. Text on gold is `gold-ink`, never white.
 - No other accent. The city's own lights carry the cyan and violet.
 
 ## Typography
 
-- **Switzer** for everything, from the signature line to the fine print. Hierarchy comes from size
-  and weight: 700 for the signature line and headlines, 600 for titles, buttons and emphasis, 500 for
-  nav and labels, 400 for reading.
-- Headlines take slight negative tracking (`-0.02em` to `-0.01em`); body text takes none.
-- Durations and step numbers use tabular figures.
-- Sentence case everywhere. No tracked uppercase labels, no second display face, no monospace.
-- Headings balance (`text-wrap: balance`); paragraphs, list items and cells use `pretty`.
+- **Archivo** (variable width) for everything but one line. Three widths, three jobs:
+  - 62%, weight 800, uppercase: the signature line, headings (`.h2`), titles (`.h3`, panel titles,
+    the band). Line height under 0.9.
+  - 100%, weight 400: reading text. Weight 600 for emphasis.
+  - 125%, weight 600, uppercase, tracked 0.12 to 0.14em, 12 to 13px: HUD labels, nav, buttons, chips,
+    the rail, the readout, form labels, table heads.
+- **Newsreader italic** only for the line that sits on top of a display line: "Every card game
+  deserves", and the `<em>` that opens a heading ("See what", "Get in", "Be first"). It is 0.46em of
+  its heading, or the kick size on the signature. Never a whole headline.
+- Outline capitals (`-webkit-text-stroke`, 1.5px) for big numerals and every other phrase of the band.
+- Tabular figures for every number in the HUD.
 
 ## Layout
 
-- Home scenes pad by `gutter` on the left and `gutter + rail` on the right, so text never runs
-  under the scene rail. Hero bottom-left with the trailer loop on the right; prototypes as a 7/5
-  split with frames of unequal size; waitlist as tagline left and panel right; contact left over the
-  cathedral.
-- Every scene must fit 1280×720 without scrolling; `.demos` is capped at `129vh` wide for that.
-- `/publishers/` sections sit in a 1160px column with 80–140px between sections and more space
-  above a heading than below it.
-- Phones: one column, the scene scrolls inside itself before it pages.
+- Home scenes pad by `gutter` on the left and `gutter + rail` on the right, so text never runs under
+  the rail or the readout.
+- Hero: HUD tags top left and right, the trailer viewfinder on the right, the signature line across
+  the bottom with the lede (7) and the actions (5) under it. Prototypes: heading and lede, then two
+  panels 7/5, then the pilot link and the art note. Waitlist: the band full-bleed, then the heading
+  (6) and the box (5). Contact: left over the cathedral, fine print along the bottom.
+- Every scene must fit 1280×720 without scrolling.
+- `/publishers/` sections sit in a 1160px column with 80–140px between sections.
+- Phones: one column, the signature splits onto two lines, the scene scrolls inside itself before it
+  pages.
 
 ## Elevation & Depth
 
-Flat. Surfaces are set apart by `night-2` and a `line` border, not by shadow; only the dialog casts
-one. Legibility over the city comes from linear scrims on each scene's text side (`scrim` at 45–92%
-alpha), not from radial spotlights. Text over the city may carry a short offset shadow,
-`0 1px 3px rgb(0 0 0 / 0.8)`.
+Flat. Surfaces are set apart by `night-2`, a 1px `line` and brackets, not by shadow; only the dialog
+casts one. Legibility over the city comes from linear scrims on each scene's text side (`scrim` at
+45–92% alpha). Text over the city may carry a short offset shadow, `0 1px 3px rgb(0 0 0 / 0.8)`.
 
 ## Shapes
 
-Two radii: `control` 4px for buttons, fields, tools and chips; `surface` 8px for video frames,
-panels and the dialog.
+No radii. Two marks instead:
+
+- **Brackets**: four 1px L marks on the corners, drawn by the element's `::after` from `--bk` (colour),
+  `--bl` (leg) and `--bi` (inset). Anything that frames something gets them: the viewport, the
+  trailer viewfinder, panels, the waitlist box, the pilot form, video frames, line buttons, tools,
+  the dialog. They grow and turn gold on hover.
+- **Chamfer**: the top-left and bottom-right corners cut at 45°, drawn by the background gradient so
+  focus rings are not clipped. Only what you press and is gold: primary buttons, send buttons,
+  chips.
+
+## Motion
+
+- A cut: the old scene's text drops out fast, the scan line crosses the screen in the direction of
+  travel, the viewport brackets pull in and turn gold while the camera flies, then the new scene's
+  display lines rise out of a slot (`.wipe`) and the rest settles in, staggered by `--d`. HUD labels
+  marked `data-decode` scramble into place. The rail marker slides.
+- The band moves only when its scene arrives: in from the right going down the page, from the left
+  coming back up, then rests. No looping marquees.
+- Reduced motion: no flights, sweeps, decoding or band slide. Text fades without moving.
 
 ## Components
 
-- **Buttons**: gold (primary) or line (secondary, translucent night with a `line-2` border). Icons
-  are Lucide paths in the page's SVG sprite, 18px, stroke 2. The arrow nudges 3px on hover.
-- **Frame**: a 16:9 video still or loop with a chip (play icon and duration) bottom-left. The chip
-  turns gold on hover. Used by the hero teaser and both prototypes.
-- **Plate**: a frame, then title, a `bone-3` meta line and one sentence.
-- **Panel**: `night-2`, `line` border, `surface` radius. Holds the waitlist form and the pilot form.
-- **Field**: input plus an inset gold send button; focuses with a gold border.
-- **Rail**: scene names with a line that grows and turns gold on the current scene. Names hide
+- **Buttons**: gold (primary, chamfered) or line (secondary, translucent night, `line` border and
+  brackets). Wide-cap labels. Icons are Lucide paths in the page's SVG sprite, 16px, stroke 2. The
+  arrow nudges 3px on hover.
+- **Panel**: a prototype still with its outline numeral top left, a HUD tag top right, the title and
+  one sentence bottom left, the duration chip bottom right. Opens the footage dialog.
+- **Viewfinder**: the hero's trailer loop inside brackets, with a HUD bar under it.
+- **HUD box**: `night-2`, `line` border, brackets, a header bar of HUD labels with a gold diamond.
+  Holds the waitlist form and the pilot form.
+- **Field**: input on an underline plus a chamfered gold send button; the underline turns gold on
+  focus.
+- **Rail**: names and numbers on a 1px track; a gold marker slides to the current scene. Names hide
   under 1000px.
+- **Readout**: bottom right, the scene number and name and the camera's X / Y / Z. Hidden under
+  1000px and without WebGL.
 
 ## Do's and Don'ts
 
 - Do keep text on a scrim or a solid surface.
-- Do reuse frame, panel and field before adding a component.
-- Don't add a second typeface, a monospace, or decorative card chrome (cost rows, type lines,
-  tilted cards, inset frame lines).
-- Don't add labels above headings, numbered section labels, gradient text, glows, glass, pulsing
-  dots or spinning borders.
-- Don't add a second accent color.
+- Do reuse panel, HUD box, field, brackets and chamfer before adding a component.
+- Do keep the HUD honest: it shows the real scene and the real camera, not invented telemetry.
+- Don't set anything larger than the signature line.
+- Don't add a third typeface, a monospace, or an italic serif headline.
+- Don't add glows, gradient text, glass, pulsing dots, spinning borders, rounded corners or
+  repeating stripe textures.
+- Don't add a second accent colour.
 - Don't use em dashes in copy, or slogan pairs of the "not X, but Y" kind. Say the partnership plainly.
 - Run the Impeccable detector (README "Slop check") on every scene after a visual change.

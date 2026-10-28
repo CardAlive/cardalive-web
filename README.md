@@ -7,13 +7,17 @@ original prototypes (AR Card Battles and Kishi City) are presented as capability
 the technology, not as a separate TCG. The stance is partnership: CardAlive helps and partners with
 TCG publishers and does not compete with them, and the copy says so on every page. Copy must not
 imply that every existing game can already be fully integrated. "Every Card Game Deserves Another
-Dimension." is the signature line (`.hero__sig`), the largest text after the logo on both pages.
+Dimension." is the signature line (`.sig`), the largest text on both pages: an italic "Every card
+game deserves" over "ANOTHER DIMENSION." in condensed capitals, sized by `assets/js/fit.js` to fill
+the width.
 
-Look: night ink, gold for actions and bone for text over the city. One typeface, Switzer, for
-everything, set apart by weight and size (see "Fonts"). The tokens and rules live in `DESIGN.md`. Readability: light text sits on the moving city, so each scene lays a
-dark linear scrim over the side its text is on (`.scene--*::before`). Keep new text on a scrim or a
-solid surface, never bare over the canvas. No glows, gradient text, labels above headings or
-numbered section labels: run the slop check (below) after changing the look.
+Look: a poster set inside a HUD, over the city. Night ink, bone text, gold for actions. Condensed
+capitals for display with an italic serif line on top, wide capitals for HUD labels, corner brackets
+on what frames something, chamfers on what you press (see "Fonts"). The tokens and rules live in
+`DESIGN.md`. Readability: light text sits on the moving city, so each scene lays a dark linear scrim
+over the side its text is on (`.scene--*::before`). Keep new text on a scrim or a solid surface,
+never bare over the canvas. No glows, gradient text or glass: run the slop check (below) after
+changing the look.
 
 Live: https://cardalive.xyz (GitHub Pages, deploy from `master` / root). Plain HTML, CSS and JS,
 no build step.
@@ -35,15 +39,22 @@ over the roofs while the text dissolves out and re-forms.
 
 | # | Scene (`id`) | Camera (`data-cam`) | What's in it |
 |---|---|---|---|
-| I | `hero` | `hero` | bottom-left: logo, the signature line, lede, For publishers and Watch the trailer buttons, the player waitlist link. Right: a muted loop of the trailer |
-| II | `prototypes` | `scale-table` | See what CardAlive can do: two prototype plates of unequal size, each opens its video in a dialog; the artwork note |
-| III | `waitlist` | `finale` | the tagline, a line to the publishers page, and a panel with the player waitlist field |
+| I | `hero` | `hero` | HUD tags top; the trailer loop in a viewfinder on the right; across the bottom the signature line, lede, For publishers (and Watch the trailer when the viewfinder is hidden), the player waitlist link |
+| II | `prototypes` | `scale-table` | See what CardAlive can do: two prototype panels of unequal width, each opens its video in a dialog; the artwork note |
+| III | `waitlist` | `finale` | the tagline as a full-width band that slides in with the scroll, "Be first to play." and a HUD panel with the waitlist field and a line to the publishers page |
 | IV | `contact` | `contact` | contact email field ("Send a raven"), fine print |
 
 Camera keyframes live in `KF` in `world.js`. It still holds the keyframes for the old district tour
 and scales, which nothing uses now. To add a scene, add a `<section class="scene">` with `data-cam`,
 `data-corr` and `data-title`, and its keyframe. Then renumber the `data-goto` indexes in `index.html`.
-The rail on the right is built from each scene's `data-title`.
+The rail on the right is built from each scene's `data-title` and numbered; a gold marker slides to
+the current scene.
+
+The HUD is decorative and `aria-hidden`: corner brackets on the viewport (`.hud-frame`, they pull in
+and turn gold while `body.is-flying`), a scan line that crosses the screen in the direction of travel
+on each cut (`#scan`), and a readout bottom-right with the scene number and the real camera position,
+read from `CA.cam` (world.js sets it to `camera.position`). Labels marked `data-decode` scramble into
+place when their scene arrives. Reduced motion turns the sweep and the decoding off.
 
 There is no loading screen: the text shows at once over the night and the city fades in behind it
 when its module is ready. Text in a scene carries `.fx` (with `--d` for its stagger) to leave
@@ -142,9 +153,9 @@ too, give its dialog a `<div class="reel__video" data-yt="ID">` instead of the `
 `/publishers/` button `data-yt` instead of `data-src`.
 
 The teaser is a muted loop of 0:06–0:36 (`cardalive-trailer-loop.mp4`, 640×360, ~1.5 MB) in a
-16:9 frame at the hero's bottom right; clicking it opens the full cut with sound. It shows from
-1100×720 up; smaller screens hide it, the
-loop never loads, and the Watch the trailer button carries the trailer. Bump the `?v=` on the
+bracketed 16:9 viewfinder on the hero's right; clicking it opens the full cut with sound. It shows
+from 1100×720 up, and there it replaces the Watch the trailer button; smaller screens hide it, the
+loop never loads, and the button carries the trailer. Bump the `?v=` on the
 trailer URLs in `index.html` when you replace a file. Re-encode from the master render:
 
 ```
@@ -196,8 +207,9 @@ publishers/index.html      the publisher page
 contact/index.html         redirect to /#contact
 assets/css/style.css       the whole look (publishers reuses its tokens, buttons, type, frames, fields)
 assets/css/publishers.css  publisher page layout, scrolling, pilot form
-assets/js/main.js          scenes, input, footage dialogs, sound
+assets/js/main.js          scenes, input, HUD (rail, readout, scan, decode), footage dialogs, sound
 assets/js/forms.js         email forms (both pages)
+assets/js/fit.js           sizes the signature line to the width (both pages)
 assets/js/publishers.js    in-place video players on /publishers/
 assets/js/world.js         the city (three.js module)
 assets/img/                logo, favicon, share image, prototype thumbnails, fallback skyline,
@@ -209,8 +221,13 @@ CNAME                      cardalive.xyz — deleting it drops the custom domain
 
 ## Fonts
 
-One family: [Switzer](https://www.fontshare.com/fonts/switzer) 400 / 500 / 600 / 700, loaded from
-Fontshare's CDN (ITF Free Font License), with Segoe UI and the system sans as fallbacks. Headings are
-700 or 600 with slight negative tracking; body is 400; nav, labels and buttons are 500 or 600.
-Durations use `font-variant-numeric: tabular-nums`. Avoid Inter, Roboto, Geist and the like: the slop
+Two families from Google Fonts (both SIL Open Font License), Segoe UI and Georgia as fallbacks:
+
+- [Archivo](https://fonts.google.com/specimen/Archivo), variable in width and weight
+  (`wdth,wght@62..125,400..800`). Display capitals are 800 at `font-stretch: 62%`; reading text is 400
+  at 100%; HUD labels, nav, buttons and the rail are 600 at 125%, uppercase, tracked 0.12 to 0.14em.
+- [Newsreader](https://fonts.google.com/specimen/Newsreader) italic 400, only for the line that sits
+  on top of a display line (`.sig__kick`, `<em>` inside `.h2`).
+
+Numbers in the HUD use `font-variant-numeric: tabular-nums`. Avoid Inter, Roboto, Geist and the like: the slop
 check flags them as overused.

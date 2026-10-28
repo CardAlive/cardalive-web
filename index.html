@@ -16,12 +16,12 @@
 
   <link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml" />
 
-  <link rel="preconnect" href="https://api.fontshare.com" />
-  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
-  <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Newsreader:ital,opsz,wght@1,6..72,400&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="./assets/css/style.css" />
-  <noscript><style>.scene--hero { visibility: visible; } .scene--hero .fx { opacity: 1; transform: none; } .scene--hero::before { opacity: 1; }</style></noscript>
+  <noscript><style>.scene--hero { visibility: visible; } .scene--hero .fx { opacity: 1; transform: none; clip-path: none; } .scene--hero::before { opacity: 1; } .sig__big { font-size: 10.5vw; }</style></noscript>
 
   <script type="importmap">
   {
@@ -40,7 +40,6 @@
     <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></symbol>
     <symbol id="i-mute" viewBox="0 0 24 24"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z" /><path d="m22 9-6 6" /><path d="m16 9 6 6" /></symbol>
     <symbol id="i-sound" viewBox="0 0 24 24"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z" /><path d="M16 9a5 5 0 0 1 0 6" /><path d="M19.4 18.4a9 9 0 0 0 0-12.8" /></symbol>
-    <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol>
   </svg>
 
   <!-- The city behind every scene: a real-time rendering (world.js). -->
@@ -48,6 +47,10 @@
   <div class="fallback-sky" aria-hidden="true"></div>
   <div class="shade" aria-hidden="true"></div>
   <div class="dissolve" id="dissolve" aria-hidden="true"></div>
+
+  <!-- HUD: corner brackets on the viewport and the scan line that crosses it on every cut -->
+  <div class="hud-frame" aria-hidden="true"></div>
+  <div class="scan" id="scan" aria-hidden="true"></div>
 
   <header class="nav">
     <button class="nav__brand" type="button" data-goto="0" aria-label="CardAlive, back to the start">
@@ -75,52 +78,70 @@
     <ol id="rail"></ol>
   </nav>
 
+  <!-- Bottom-right readout: the scene, and where the real camera is in the city -->
+  <div class="readout" aria-hidden="true">
+    <span class="readout__k"><b id="ro-n">01</b> / <span id="ro-of">04</span></span>
+    <span class="readout__name" id="ro-name">CardAlive</span>
+    <span class="readout__cam" id="ro-cam"></span>
+  </div>
+
   <main class="stage" id="stage">
 
-    <section class="scene scene--hero" id="hero" data-title="CardAlive" data-cam="hero" data-corr="0.10" aria-label="CardAlive">
-      <div class="hero">
-        <h1 class="hero__logo fx">
-          <img src="./assets/img/logo.png" alt="CardAlive" width="1704" height="923" />
-        </h1>
-        <p class="hero__sig fx" style="--d:1">Every Card Game Deserves Another Dimension.</p>
-        <p class="hero__lede fx" style="--d:2">CardAlive is a mixed-reality platform for trading-card games on Meta&nbsp;Quest&nbsp;3. We partner with publishers to bring their existing games into the room, with their own cards, characters and gameplay at the center.</p>
-        <div class="hero__actions fx" style="--d:3">
-          <a class="btn btn--gold" href="./publishers/">For publishers<svg class="ico ico--go" aria-hidden="true"><use href="#i-go" /></svg></a>
-          <button class="btn btn--line" type="button" data-reel="trailer"><svg class="ico ico--fill" aria-hidden="true"><use href="#i-play" /></svg>Watch the trailer<span class="btn__meta">0:40</span></button>
-        </div>
-        <p class="hero__players fx" style="--d:4">Here to play? <a href="#waitlist" data-goto="2" data-focus="gate-email">Join the waitlist</a></p>
-      </div>
+    <section class="scene scene--hero" id="hero" data-title="CardAlive" data-cam="hero" data-corr="0.10" aria-labelledby="sig">
+      <p class="hero__tags hud fx" aria-hidden="true"><span><span data-decode>Mixed reality for</span><br /><span data-decode>trading-card games</span></span><span><span data-decode>Meta Quest 3</span><br /><span data-decode>In development</span></span></p>
+      <i class="cross fx" style="--x:24%; --y:30%" aria-hidden="true"></i>
+      <i class="cross fx" style="--x:63%; --y:22%; --d:2" aria-hidden="true"></i>
+      <i class="cross fx" style="--x:44%; --y:46%; --d:4" aria-hidden="true"></i>
+
       <!-- A muted loop of the trailer; the full cut with sound opens in a dialog. -->
-      <button class="frame teaser fx" style="--d:3" type="button" data-reel="trailer" aria-label="Watch the CardAlive trailer, 40 seconds, with sound">
-        <video id="teaser" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"
-               poster="./assets/video/cardalive-trailer.jpg?v=2">
-          <source src="./assets/video/cardalive-trailer-loop.mp4?v=2" type="video/mp4" />
-        </video>
-        <span class="chip" aria-hidden="true"><svg class="ico ico--fill"><use href="#i-play" /></svg>Trailer &middot; 0:40</span>
+      <button class="teaser fx" style="--d:3" type="button" data-reel="trailer" aria-label="Watch the CardAlive trailer, 40 seconds, with sound">
+        <span class="teaser__frame">
+          <video id="teaser" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"
+                 poster="./assets/video/cardalive-trailer.jpg?v=2">
+            <source src="./assets/video/cardalive-trailer-loop.mp4?v=2" type="video/mp4" />
+          </video>
+        </span>
+        <span class="teaser__bar hud" aria-hidden="true"><span><svg class="ico ico--fill"><use href="#i-play" /></svg>Trailer</span><span>00:40</span></span>
       </button>
+
+      <div class="hero">
+        <h1 class="sig" id="sig"><span class="sig__kick fx wipe">Every card game deserves</span> <span class="sig__big fx wipe" style="--d:1" data-fit="0.24"><span>Another</span> <span>dimension.</span></span></h1>
+        <div class="hero__foot">
+          <p class="hero__lede fx" style="--d:2"><strong>CardAlive is a mixed-reality platform for trading-card games on Meta&nbsp;Quest&nbsp;3.</strong> We partner with publishers to bring their existing games into the room, with their own cards, characters and gameplay at the center.</p>
+          <div class="hero__cta fx" style="--d:3">
+            <div class="hero__actions">
+              <a class="btn btn--gold" href="./publishers/">For publishers<svg class="ico ico--go" aria-hidden="true"><use href="#i-go" /></svg></a>
+              <button class="btn btn--line" type="button" data-reel="trailer"><svg class="ico ico--fill" aria-hidden="true"><use href="#i-play" /></svg>Watch the trailer<span class="btn__meta">0:40</span></button>
+            </div>
+            <p class="hero__players">Here to play? <a href="#waitlist" data-goto="2" data-focus="gate-email">Join the waitlist</a></p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="scene scene--demos" id="prototypes" data-title="Prototypes" data-cam="scale-table" data-corr="0.20" aria-labelledby="demos-title">
       <div class="demos">
-        <h2 class="h2 demos__title fx" id="demos-title">See what CardAlive can do</h2>
+        <h2 class="h2 demos__title fx wipe" id="demos-title"><em>See what</em> CardAlive can do</h2>
         <p class="demos__lede fx" style="--d:1">Two prototypes, built with our own original characters, show the technology we're developing for existing trading-card games. Partner publishers bring their own games to it.</p>
-        <button class="plate plate--lead fx" style="--d:2" type="button" data-reel="proto-01" aria-label="Play Prototype 01, AR Card Battles, 1 minute 5 seconds">
-          <span class="frame">
-            <img src="./assets/img/prototype-01.jpg" width="960" height="540" alt="" loading="lazy" decoding="async" />
-            <span class="chip" aria-hidden="true"><svg class="ico ico--fill"><use href="#i-play" /></svg>1:05</span>
+        <button class="panel panel--lead fx" style="--d:2" type="button" data-reel="proto-01" aria-label="Play Prototype 01, AR Card Battles, 1 minute 5 seconds">
+          <img src="./assets/img/prototype-01.jpg" width="960" height="540" alt="" loading="lazy" decoding="async" />
+          <span class="panel__n" aria-hidden="true">01</span>
+          <span class="panel__tag hud" aria-hidden="true" data-decode>Recorded in-headset</span>
+          <span class="panel__txt">
+            <span class="panel__title">AR Card Battles</span>
+            <span class="panel__text">Printed cards on a real table summon 3D characters that take turns and battle.</span>
           </span>
-          <span class="h3 plate__title">AR Card Battles</span>
-          <span class="plate__meta">Prototype 01 &middot; recorded in-headset</span>
-          <span class="plate__text">Printed cards on a real table summon 3D characters that take turns and battle.</span>
+          <span class="panel__time hud" aria-hidden="true"><svg class="ico ico--fill"><use href="#i-play" /></svg>1:05</span>
         </button>
-        <button class="plate fx" style="--d:3" type="button" data-reel="proto-02" aria-label="Play Prototype 02, Kishi City, 1 minute 16 seconds">
-          <span class="frame">
-            <img src="./assets/img/prototype-02.jpg" width="640" height="360" alt="" loading="lazy" decoding="async" />
-            <span class="chip" aria-hidden="true"><svg class="ico ico--fill"><use href="#i-play" /></svg>1:16</span>
+        <button class="panel fx" style="--d:3" type="button" data-reel="proto-02" aria-label="Play Prototype 02, Kishi City, 1 minute 16 seconds">
+          <img src="./assets/img/prototype-02.jpg" width="640" height="360" alt="" loading="lazy" decoding="async" />
+          <span class="panel__n" aria-hidden="true">02</span>
+          <span class="panel__tag hud" aria-hidden="true" data-decode>In development</span>
+          <span class="panel__txt">
+            <span class="panel__title">Kishi City</span>
+            <span class="panel__text">A character, the world built around him, and a city to explore.</span>
           </span>
-          <span class="h3 plate__title">Kishi City</span>
-          <span class="plate__meta">Prototype 02 &middot; in development</span>
-          <span class="plate__text">A character, the world built around him, and a city to explore.</span>
+          <span class="panel__time hud" aria-hidden="true"><svg class="ico ico--fill"><use href="#i-play" /></svg>1:16</span>
         </button>
         <p class="demos__pub fx" style="--d:4">Publishing a card game? <a class="link-go" href="./publishers/#pilot">Explore a pilot<svg class="ico" aria-hidden="true"><use href="#i-go" /></svg></a></p>
         <p class="art-note fx" style="--d:5">Prototype card artwork is AI-assisted placeholder art for this proof of concept, not final artwork. Publisher experiences use each game's original card art, characters and creative identity.</p>
@@ -128,15 +149,22 @@
     </section>
 
     <section class="scene scene--wait" id="waitlist" data-title="Waitlist" data-cam="finale" data-corr="0.30" aria-labelledby="wait-title">
-      <div class="wait">
-        <div>
-          <h2 class="h2 wait__tag fx" id="wait-title"><span>Your cards.</span> <span>Your rules.</span> <span>Your world, alive.</span></h2>
-          <p class="wait__pub inline fx" style="--d:2">Publishing a card game? We work with publishers to bring their games into mixed reality. <a href="./publishers/">Explore a pilot</a></p>
+      <p class="sr-only">Your cards. Your rules. Your world, alive.</p>
+      <div class="band fx" aria-hidden="true">
+        <div class="band__track">
+          <span>Your cards</span><i></i><span>Your rules</span><i></i><span>Your world, alive</span><i></i>
+          <span>Your cards</span><i></i><span>Your rules</span><i></i><span>Your world, alive</span><i></i>
+          <span>Your cards</span><i></i><span>Your rules</span><i></i><span>Your world, alive</span><i></i>
+          <span>Your cards</span><i></i><span>Your rules</span><i></i><span>Your world, alive</span><i></i>
         </div>
-        <form class="join fx" style="--d:1" action="https://formsubmit.co/cardalive@protonmail.com" method="post" novalidate
-              data-raven data-subject="CardAlive waitlist">
-          <label class="join__title" for="gate-email" data-done="You're on the list.">Be first to play.</label>
-          <p class="join__text">Early access is coming to Meta&nbsp;Quest&nbsp;3. Leave your email and we'll write when it opens.</p>
+      </div>
+      <form class="wait" action="https://formsubmit.co/cardalive@protonmail.com" method="post" novalidate
+            data-raven data-subject="CardAlive waitlist">
+        <h2 class="wait__h fx wipe" style="--d:1" id="wait-title" data-done="You're on the list."><em>Be first</em> to play.</h2>
+        <div class="wait__box hudbox fx" style="--d:2">
+          <p class="hudbox__bar hud" aria-hidden="true"><span data-decode>Early access</span><span>Meta Quest 3</span></p>
+          <p class="wait__text">Early access is coming to Meta&nbsp;Quest&nbsp;3. Leave your email and we'll write when it opens.</p>
+          <label class="label hud" for="gate-email">Your email</label>
           <span class="field">
             <input class="field__input" id="gate-email" name="email" type="email" inputmode="email" autocomplete="email"
                    placeholder="your@email.com" maxlength="254" required />
@@ -145,17 +173,18 @@
           <input type="hidden" name="source" value="Waitlist (players)" />
           <input class="raven__honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <p class="raven__status" role="status" data-done="We will write to {email} when early access opens."></p>
-        </form>
-      </div>
+          <p class="wait__pub inline">Publishing a card game? We work with publishers to bring their games into mixed reality. <a href="./publishers/">Explore a pilot</a></p>
+        </div>
+      </form>
     </section>
 
     <section class="scene scene--contact" id="contact" data-title="Contact" data-cam="contact" data-corr="0.25" aria-labelledby="contact-title">
       <div class="contact">
-        <h2 class="h2 fx" id="contact-title">Get in touch.</h2>
+        <h2 class="h2 fx wipe" id="contact-title"><em>Get in</em> touch.</h2>
         <p class="lede fx" style="--d:1">Players, press and publishers: leave your email and we'll write back. Publishers looking to partner can also <a href="./publishers/#pilot">explore a pilot</a>.</p>
         <form class="mail fx" style="--d:2" action="https://formsubmit.co/cardalive@protonmail.com" method="post" novalidate
               data-raven data-subject="CardAlive contact">
-          <label class="mail__label" for="raven-email">Your email</label>
+          <label class="label hud" for="raven-email">Your email</label>
           <span class="field">
             <input class="field__input" id="raven-email" name="email" type="email" inputmode="email" autocomplete="email"
                    placeholder="your@email.com" maxlength="254" required />
@@ -171,7 +200,7 @@
   </main>
 
   <dialog class="reel" id="trailer" aria-label="CardAlive trailer">
-    <button class="reel__close" type="button" aria-label="Close"><svg class="ico" aria-hidden="true"><use href="#i-close" /></svg></button>
+    <button class="reel__close" type="button" aria-label="Close"><span aria-hidden="true">Close</span><svg class="ico" aria-hidden="true"><use href="#i-close" /></svg></button>
     <video class="reel__video" controls playsinline preload="none"
            poster="./assets/video/cardalive-trailer.jpg?v=2">
       <source src="./assets/video/cardalive-trailer.mp4?v=2" type="video/mp4" />
@@ -180,7 +209,7 @@
   </dialog>
 
   <dialog class="reel" id="proto-01" aria-label="Prototype 01: AR Card Battles">
-    <button class="reel__close" type="button" aria-label="Close"><svg class="ico" aria-hidden="true"><use href="#i-close" /></svg></button>
+    <button class="reel__close" type="button" aria-label="Close"><span aria-hidden="true">Close</span><svg class="ico" aria-hidden="true"><use href="#i-close" /></svg></button>
     <video class="reel__video" controls playsinline preload="none"
            poster="./assets/video/where-we-are-now.jpg">
       <source src="./assets/video/where-we-are-now.mp4" type="video/mp4" />
@@ -189,13 +218,14 @@
   </dialog>
 
   <dialog class="reel" id="proto-02" aria-label="Prototype 02: Kishi City">
-    <button class="reel__close" type="button" aria-label="Close"><svg class="ico" aria-hidden="true"><use href="#i-close" /></svg></button>
+    <button class="reel__close" type="button" aria-label="Close"><span aria-hidden="true">Close</span><svg class="ico" aria-hidden="true"><use href="#i-close" /></svg></button>
     <div class="reel__video" data-yt="3THAZpt9uw8" data-yt-title="Prototype 02: Every Character Has a World"></div>
     <p class="reel__cap">Prototype 02: a character, the world built around him, and the city to explore. In development.</p>
   </dialog>
 
-  <div class="hint" id="hint" aria-hidden="true"><span>Scroll</span><svg class="ico"><use href="#i-down" /></svg></div>
+  <div class="hint" id="hint" aria-hidden="true"><span>Scroll</span><i></i></div>
 
+  <script src="./assets/js/fit.js" defer></script>
   <script src="./assets/js/forms.js" defer></script>
   <script src="./assets/js/main.js" defer></script>
   <script type="module" src="./assets/js/world.js"></script>

@@ -67,6 +67,7 @@ scene.fog = new THREE.FogExp2(FOG_NIGHT.clone(), 0.0024);
 scene.background = FOG_NIGHT.clone();
 
 const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.5, 4200);
+S.cam = camera.position; // read by the HUD readout in main.js
 
 // The post chain renders into its own targets, so the canvas's own antialias flag does nothing;
 // multisample those targets instead.

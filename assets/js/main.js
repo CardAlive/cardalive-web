@@ -53,13 +53,38 @@
   var hint = $('#hint');
   if (window.matchMedia('(pointer: coarse)').matches) $('span', hint).textContent = 'Swipe';
 
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
   var railEl = $('#rail');
   scenes.forEach(function (sc, i) {
     var li = document.createElement('li');
-    li.innerHTML = '<button type="button" data-goto="' + i + '"><span class="rail__t">' + sc.dataset.title + '</span></button>';
+    li.innerHTML = '<button type="button" data-goto="' + i + '"><span class="rail__t">' + sc.dataset.title + '</span><span class="rail__n" aria-hidden="true">' + pad(i + 1) + '</span></button>';
     railEl.appendChild(li);
   });
   var railItems = $$('li', railEl);
+
+  /* HUD: the scan line that crosses the screen on a cut, the readout bottom-right, and
+     labels that decode into place when their scene arrives. All decorative (aria-hidden). */
+  var scan = $('#scan'), roN = $('#ro-n'), roName = $('#ro-name'), roCam = $('#ro-cam');
+  $('#ro-of').textContent = pad(scenes.length);
+  var GLYPHS = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789#/+<>';
+  function decode(el) {
+    var text = el.dataset.text || (el.dataset.text = el.textContent);
+    cancelAnimationFrame(el._decode);
+    if (reduceMotion || STILL) { el.textContent = text; return; }
+    var t0 = performance.now() + 350, dur = 420 + text.length * 14;
+    (function step(t) {
+      var k = clamp((t - t0) / dur, 0, 1), n = Math.floor(text.length * k), out = text.slice(0, n);
+      for (var i = n; i < text.length; i++) out += /\s/.test(text[i]) ? text[i] : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+      el.textContent = out;
+      if (k < 1) el._decode = requestAnimationFrame(step);
+    })(performance.now());
+  }
+  function cut(dir) {
+    if (reduceMotion || STILL) return;
+    scan.className = 'scan';
+    void scan.offsetWidth;  // restart the sweep
+    scan.className = 'scan is-' + (dir > 0 ? 'down' : 'up');
+  }
 
   document.addEventListener('click', function (e) {
     var t = e.target.closest('[data-goto]');
@@ -102,11 +127,17 @@
       var b = li.firstChild;
       if (k === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
     });
+    railEl.style.setProperty('--i', i);
     document.body.dataset.scene = to.id;
     hint.classList.toggle('is-on', i === 0);
+    roN.textContent = pad(i + 1);
+    roName.dataset.text = to.dataset.title;
+    decode(roName);
+    $$('[data-decode]', to).forEach(decode);
     if (!opts.silent) {
       try { history.replaceState(null, '', i === 0 ? location.pathname + location.search : '#' + to.id); } catch (err) {}
       sfx.whoosh(dir);
+      cut(dir);
     }
     locked = true;
     setTimeout(function () { locked = false; }, reduceMotion ? 300 : 1000);
@@ -318,11 +349,18 @@
      Per-frame: corruption easing, flight cue
      ------------------------------------------------------------ */
   S.corrTarget = 0.1;
-  (function frame() {
+  var roAt = 0;
+  function coord(axis, v) { var s = Math.abs(v).toFixed(1); while (s.length < 6) s = '0' + s; return axis + ' ' + (v < 0 ? '−' : '+') + s; }
+  (function frame(t) {
     S.corr += (S.corrTarget - S.corr) * 0.05;
     document.body.classList.toggle('is-flying', !!S.flying);
+    // the readout shows where the real camera is, about 12 times a second
+    if (S.cam && t - roAt > 80) {
+      roAt = t;
+      roCam.textContent = coord('X', S.cam.x) + '\n' + coord('Y', S.cam.y) + '\n' + coord('Z', S.cam.z);
+    }
     requestAnimationFrame(frame);
-  })();
+  })(0);
 
   /* ------------------------------------------------------------
      Boot. The text shows at once over the night; the city fades in behind it when ready.

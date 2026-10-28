@@ -17,9 +17,9 @@
 
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
 
-  <link rel="preconnect" href="https://api.fontshare.com" />
-  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
-  <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Newsreader:ital,opsz,wght@1,6..72,400&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="../assets/css/style.css" />
   <link rel="stylesheet" href="../assets/css/publishers.css" />
@@ -48,20 +48,25 @@
     <section class="p-hero" aria-labelledby="p-title">
       <!-- A frame of the site's real-time web city (world.js), not in-engine footage -->
       <img class="p-hero__img" src="../assets/img/city-cathedral.jpg" width="1600" height="900" alt="" decoding="async" fetchpriority="high" />
+      <p class="p-hero__tags hud" aria-hidden="true"><span>For trading-card<br />publishers</span><span>Meta Quest 3<br />In development</span></p>
       <div class="p-hero__copy">
-        <h1 class="p-sig" id="p-title">Every Card Game Deserves Another Dimension.</h1>
-        <p class="p-pitch">Your game. Our technology.</p>
-        <p class="lede">CardAlive is developing a mixed-reality platform that lets trading-card publishers extend their existing games into interactive 3D experiences. Your cards, rules, characters and identity remain yours. We build the technology layer that brings them to life.</p>
-        <div class="p-actions">
-          <a class="btn btn--gold" href="#pilot">Explore a pilot<svg class="ico ico--go" aria-hidden="true"><use href="#i-go" /></svg></a>
-          <a class="btn btn--line" href="#prototypes">See the prototypes</a>
+        <h1 class="sig p-sig" id="p-title"><span class="sig__kick">Every card game deserves</span> <span class="sig__big" data-fit="0.22"><span>Another</span> <span>dimension.</span></span></h1>
+        <div class="p-hero__foot">
+          <div>
+            <p class="p-pitch">Your game. Our technology.</p>
+            <p class="lede">CardAlive is developing a mixed-reality platform that lets trading-card publishers extend their existing games into interactive 3D experiences. Your cards, rules, characters and identity remain yours. We build the technology layer that brings them to life.</p>
+          </div>
+          <div class="p-actions">
+            <a class="btn btn--gold" href="#pilot">Explore a pilot<svg class="ico ico--go" aria-hidden="true"><use href="#i-go" /></svg></a>
+            <a class="btn btn--line" href="#prototypes">See the prototypes</a>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="p-sec p-own" id="partners" aria-labelledby="own-title">
       <div class="p-own__head">
-        <h2 class="h2" id="own-title">Your game stays yours.</h2>
+        <h2 class="h2" id="own-title"><em>Your game</em> stays yours.</h2>
         <p class="lede">CardAlive builds the mixed-reality technology and works with your team to extend the game you already have. We aren't making a trading-card game of our own.</p>
       </div>
       <dl class="p-terms">
@@ -82,7 +87,7 @@
 
     <section class="p-sec" id="prototypes" aria-labelledby="proto-title">
       <div class="p-sec__head">
-        <h2 class="h2" id="proto-title">See what CardAlive can do</h2>
+        <h2 class="h2" id="proto-title"><em>See what</em> CardAlive can do</h2>
         <p class="lede">Two prototypes, built with our own original characters, show the technology we're developing for existing trading-card games.</p>
       </div>
       <div class="p-plates">
@@ -109,7 +114,7 @@
     </section>
 
     <section class="p-sec" aria-labelledby="tech-title">
-      <h2 class="h2" id="tech-title">What the technology does today</h2>
+      <h2 class="h2" id="tech-title"><em>What the technology</em> does today</h2>
       <table class="p-table">
         <thead>
           <tr><th scope="col">Capability</th><th scope="col">What happens</th><th scope="col">Shown in</th></tr>
@@ -141,7 +146,7 @@
     <section class="p-pilot" id="pilot" aria-labelledby="pilot-title">
       <div class="p-pilot__inner">
         <div class="p-pilot__copy">
-          <h2 class="h2" id="pilot-title">Bring your game to the table.</h2>
+          <h2 class="h2" id="pilot-title"><em>Bring your game</em> to the table.</h2>
           <p class="lede">Tell us about your game and what you'd like to see in mixed reality.</p>
           <ol class="p-steps">
             <li><span><b>Write to us.</b> Use this form. We reply by email to set up a call.</span></li>
@@ -152,6 +157,7 @@
 
         <form class="pilot" action="https://formsubmit.co/cardalive@protonmail.com" method="post" novalidate
               data-raven data-subject="CardAlive pilot inquiry">
+          <p class="hudbox__bar hud" aria-hidden="true"><span>Pilot inquiry</span><span>Reply by email</span></p>
           <p class="pilot__done" data-done="Thank you." aria-hidden="true"></p>
           <div class="pilot__fields">
             <label class="pilot__field">
@@ -183,6 +189,7 @@
     <p class="fine">&copy; <span id="year">2026</span> CardAlive &middot; In development for Meta Quest 3 &middot; Unreleased; everything shown is a work in progress &middot; <a href="mailto:cardalive@protonmail.com">cardalive@protonmail.com</a></p>
   </footer>
 
+  <script src="../assets/js/fit.js" defer></script>
   <script src="../assets/js/forms.js" defer></script>
   <script src="../assets/js/publishers.js" defer></script>
 </body>
