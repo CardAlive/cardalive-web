@@ -7,11 +7,13 @@ original prototypes (AR Card Battles and Kishi City) are presented as capability
 the technology, not as a separate TCG. The stance is partnership: CardAlive helps and partners with
 TCG publishers and does not compete with them, and the copy says so on every page. Copy must not
 imply that every existing game can already be fully integrated. "Every Card Game Deserves Another
-Dimension." is the signature line (`.hero__sub`), the largest text after the logo on both pages.
+Dimension." is the signature line (`.hero__sig`), the largest text after the logo on both pages.
 
-Readability: light text sits on the moving city, so every text tier carries the `--ink` halo, body
-copy uses Cormorant at weight 500 in `--bone`, and each scene has a dark radial scrim behind its text.
-Keep new text on those, not on `--ash` or bare over the canvas.
+Look: night ink, gold for actions and bone for text over the city. One typeface, Switzer, for
+everything, set apart by weight and size (see "Fonts"). The tokens and rules live in `DESIGN.md`. Readability: light text sits on the moving city, so each scene lays a
+dark linear scrim over the side its text is on (`.scene--*::before`). Keep new text on a scrim or a
+solid surface, never bare over the canvas. No glows, gradient text, labels above headings or
+numbered section labels: run the slop check (below) after changing the look.
 
 Live: https://cardalive.xyz (GitHub Pages, deploy from `master` / root). Plain HTML, CSS and JS,
 no build step.
@@ -21,7 +23,7 @@ no build step.
 | Path | File | What it is |
 |---|---|---|
 | `/` | `index.html` | the stage: four full-screen scenes over the real-time city |
-| `/publishers/` | `publishers/index.html` | a plain scrolling page: "Your Game. Our Technology.", both demos inline, what they demonstrate, where we are, the Explore a Pilot form |
+| `/publishers/` | `publishers/index.html` | a plain scrolling page: the signature line and "Your game. Our technology." over a still of the city, Your game stays yours, both demos inline, the capability table, where we are, the Explore a Pilot form on a raised band |
 | `/contact/` | `contact/index.html` | redirects to `/#contact`, shows the address without JavaScript |
 
 ## How the home page works
@@ -33,14 +35,19 @@ over the roofs while the text dissolves out and re-forms.
 
 | # | Scene (`id`) | Camera (`data-cam`) | What's in it |
 |---|---|---|---|
-| I | `hero` | `hero` | eyebrow, logo, tagline, For Publishers and Watch the Trailer buttons, the player waitlist link, the trailer teaser |
-| II | `prototypes` | `scale-table` | See What CardAlive Can Do: the two prototype cards, each opens its video in a dialog |
-| III | `waitlist` | `finale` | the lantern: the player waitlist email field, a line to the publishers page |
+| I | `hero` | `hero` | bottom-left: logo, the signature line, lede, For publishers and Watch the trailer buttons, the player waitlist link. Right: a muted loop of the trailer |
+| II | `prototypes` | `scale-table` | See what CardAlive can do: two prototype plates of unequal size, each opens its video in a dialog; the artwork note |
+| III | `waitlist` | `finale` | the tagline, a line to the publishers page, and a panel with the player waitlist field |
 | IV | `contact` | `contact` | contact email field ("Send a raven"), fine print |
 
 Camera keyframes live in `KF` in `world.js`. It still holds the keyframes for the old district tour
 and scales, which nothing uses now. To add a scene, add a `<section class="scene">` with `data-cam`,
 `data-corr` and `data-title`, and its keyframe. Then renumber the `data-goto` indexes in `index.html`.
+The rail on the right is built from each scene's `data-title`.
+
+There is no loading screen: the text shows at once over the night and the city fades in behind it
+when its module is ready. Text in a scene carries `.fx` (with `--d` for its stagger) to leave
+quickly and settle back in.
 
 `assets/js/main.js` owns the page state in `window.CA`; `world.js` reads it every frame:
 
@@ -75,10 +82,12 @@ Sound is synthesised with WebAudio and stays off until the visitor presses **Sou
 - Motion is **on by default**, even for `prefers-reduced-motion: reduce` (including Windows with
   *Animation effects* off). Those visitors get a **Reduce motion** button in the nav, remembered in
   `localStorage` (`ca-motion`). Reduced, the camera dissolves through dark and cuts instead of
-  flying; no grain, lightning or drifting embers, and the trailer teaser shows a still frame.
+  flying; no lightning or drifting embers, text fades without moving, and the hero teaser shows a
+  still frame.
 - Slow GPUs: the renderer drops its pixel ratio after sustained slow frames. Small screens get a
   sparser city and fewer embers.
-- `/publishers/` has no 3D city at all: a still sky and the skyline (`publishers.css`).
+- `/publishers/` has no live city: its hero is a still frame of it (`assets/img/city-cathedral.jpg`,
+  the `contact` camera captured from `?still&cam=contact` with the UI hidden, 1600×900).
 
 ## Preview and screenshots
 
@@ -92,7 +101,7 @@ Debug query parameters:
 
 | Parameter | Effect |
 |---|---|
-| `?still` | skip the summoning screen and the stagger, no lightning |
+| `?still` | no entrance stagger, no lightning |
 | `?cam=<scene id>` | open on a scene |
 | `?timescale=0.1` | slow the camera flights down to inspect them |
 | `?nowebgl` | preview the no-WebGL fallback |
@@ -100,13 +109,29 @@ Debug query parameters:
 Headless Chrome will not lay out narrower than about 500 px. For phone widths, screenshot a page
 that holds the site in a 390 px `<iframe>`.
 
-`assets/img/og.jpg` (share image, both pages) is a 1200×630 capture of `?still`.
+`assets/img/og.jpg` (share image, both pages) is a 1200×630 capture of `?still` with the nav, rail
+and hint hidden.
+
+### Slop check
+
+[Impeccable](https://impeccable.style)'s detector (listed on designeer.xyz) checks the rendered page
+for generated-UI tells: glows, gradient text, kickers, nested cards, tiny text, long lines, low
+contrast. Run it against the preview server for every scene, at desktop and phone sizes:
+
+```
+npx impeccable detect http://127.0.0.1:8765/?still
+npx impeccable detect --viewport 390x844 "http://127.0.0.1:8765/?still#waitlist"
+npx impeccable detect http://127.0.0.1:8765/publishers/
+```
+
+Use `#scene` deep links rather than `&cam=`: on Windows `npx` hands the URL to `cmd`, which splits it
+at `&`. A clean scan prints nothing.
 
 ## Footage
 
 | Video | Where | Source |
 |---|---|---|
-| Trailer, 40 s | hero button, nav **Trailer** link (wider than 1000 px), hero teaser | `assets/video/cardalive-trailer.mp4` (+ `-loop.mp4` teaser, `.jpg` poster) |
+| Trailer, 40 s | hero button, hero teaser | `assets/video/cardalive-trailer.mp4` (+ `-loop.mp4` teaser, `.jpg` poster) |
 | Prototype 01 · AR Card Battles, 1:05 | scene II dialog, `/publishers/` inline | `assets/video/where-we-are-now.mp4`, the tabletop card battle recorded in-headset. Thumbnail `assets/img/prototype-01.jpg` |
 | Prototype 02 · Kishi City, 1:16 | scene II dialog, `/publishers/` inline | YouTube, unlisted on the CardAlive channel: `3THAZpt9uw8` ("Prototype 02: Every Character Has a World"). Thumbnail `assets/img/prototype-02.jpg` is YouTube's 640×480 `sddefault` frame with the letterbox cropped off |
 
@@ -117,8 +142,9 @@ too, give its dialog a `<div class="reel__video" data-yt="ID">` instead of the `
 `/publishers/` button `data-yt` instead of `data-src`.
 
 The teaser is a muted loop of 0:06–0:36 (`cardalive-trailer-loop.mp4`, 640×360, ~1.5 MB) in a
-spinning frame with a "New trailer" tag. It sits in the hero's corner from 1280×700 up and under the
-buttons on tall tablets; elsewhere it is hidden and the loop never loads. Bump the `?v=` on the
+16:9 frame at the hero's bottom right; clicking it opens the full cut with sound. It shows from
+1100×720 up; smaller screens hide it, the
+loop never loads, and the Watch the trailer button carries the trailer. Bump the `?v=` on the
 trailer URLs in `index.html` when you replace a file. Re-encode from the master render:
 
 ```
@@ -168,13 +194,23 @@ Reply-To is the visitor, and a `source` field says which form it came from. No a
 index.html                 home: the stage, import map
 publishers/index.html      the publisher page
 contact/index.html         redirect to /#contact
-assets/css/style.css       the whole look (publishers reuses its tokens, buttons, type, demo cards)
+assets/css/style.css       the whole look (publishers reuses its tokens, buttons, type, frames, fields)
 assets/css/publishers.css  publisher page layout, scrolling, pilot form
 assets/js/main.js          scenes, input, footage dialogs, sound
 assets/js/forms.js         email forms (both pages)
 assets/js/publishers.js    in-place video players on /publishers/
 assets/js/world.js         the city (three.js module)
-assets/img/                logo, favicon, share image, prototype thumbnails, fallback skyline
+assets/img/                logo, favicon, share image, prototype thumbnails, fallback skyline,
+                           city-cathedral.jpg (the /publishers/ hero)
+DESIGN.md                  tokens and rules for the look
 assets/video/              trailer, Prototype 01, poster frames
 CNAME                      cardalive.xyz — deleting it drops the custom domain
 ```
+
+## Fonts
+
+One family: [Switzer](https://www.fontshare.com/fonts/switzer) 400 / 500 / 600 / 700, loaded from
+Fontshare's CDN (ITF Free Font License), with Segoe UI and the system sans as fallbacks. Headings are
+700 or 600 with slight negative tracking; body is 400; nav, labels and buttons are 500 or 600.
+Durations use `font-variant-numeric: tabular-nums`. Avoid Inter, Roboto, Geist and the like: the slop
+check flags them as overused.

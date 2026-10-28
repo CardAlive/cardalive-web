@@ -13,158 +13,174 @@
   <meta property="og:description" content="Extend your trading-card game into mixed reality. Your cards, rules, characters and identity remain yours. We build the technology layer." />
   <meta property="og:image" content="https://cardalive.xyz/assets/img/og.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="theme-color" content="#07060b" />
+  <meta name="theme-color" content="#0c0a12" />
 
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600&family=Cinzel:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="../assets/css/style.css" />
   <link rel="stylesheet" href="../assets/css/publishers.css" />
 </head>
 <body class="page">
-  <div class="page-sky" aria-hidden="true"></div>
-  <div class="vignette" aria-hidden="true"></div>
-  <div class="grain" aria-hidden="true"></div>
+  <!-- Icons: Lucide (ISC), one stroke weight -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-go" viewBox="0 0 24 24"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M6 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L7.5 3.64A1 1 0 0 0 6 4.5z" /></symbol>
+  </svg>
 
   <header class="nav">
     <a class="nav__brand" href="../" aria-label="CardAlive home">
       <img src="../assets/img/logo.png" alt="CardAlive" width="1704" height="923" />
     </a>
-    <div class="nav__right">
+    <nav class="nav__links" aria-label="Site">
       <a class="nav__link nav__link--wide" href="#prototypes">Prototypes</a>
       <a class="nav__link nav__link--wide" href="../#waitlist">For players</a>
-      <a class="btn btn--small" href="#pilot">Explore a Pilot</a>
+    </nav>
+    <div class="nav__tools">
+      <a class="btn btn--gold btn--sm" href="#pilot">Explore a pilot</a>
     </div>
   </header>
 
   <main>
     <section class="p-hero" aria-labelledby="p-title">
-      <p class="eyebrow">A technology partner for trading-card publishers</p>
-      <h1 class="p-title" id="p-title">Your Game. <em>Our Technology.</em></h1>
-      <p class="hero__sub">Every Card Game Deserves Another Dimension.</p>
-      <p class="p-lede">CardAlive is developing a mixed-reality platform that allows trading-card publishers to extend their existing games into interactive 3D experiences. Your cards, rules, characters, and identity remain yours. We build the technology layer that brings them to life.</p>
-      <div class="p-ctas">
-        <a class="btn btn--blaze" href="#pilot"><span>Explore a Pilot</span><span class="btn__arrow" aria-hidden="true">&rarr;</span></a>
-        <a class="btn btn--ghost" href="#prototypes">See the prototypes</a>
+      <!-- A frame of the site's real-time web city (world.js), not in-engine footage -->
+      <img class="p-hero__img" src="../assets/img/city-cathedral.jpg" width="1600" height="900" alt="" decoding="async" fetchpriority="high" />
+      <div class="p-hero__copy">
+        <h1 class="p-sig" id="p-title">Every Card Game Deserves Another Dimension.</h1>
+        <p class="p-pitch">Your game. Our technology.</p>
+        <p class="lede">CardAlive is developing a mixed-reality platform that lets trading-card publishers extend their existing games into interactive 3D experiences. Your cards, rules, characters and identity remain yours. We build the technology layer that brings them to life.</p>
+        <div class="p-actions">
+          <a class="btn btn--gold" href="#pilot">Explore a pilot<svg class="ico ico--go" aria-hidden="true"><use href="#i-go" /></svg></a>
+          <a class="btn btn--line" href="#prototypes">See the prototypes</a>
+        </div>
       </div>
     </section>
 
-    <section class="p-section" id="partners" aria-labelledby="partners-title">
-      <p class="rune-label">How we work</p>
-      <h2 class="h2" id="partners-title">Partners, not competitors.</h2>
-      <p class="lede">CardAlive isn't building a trading-card game to compete with yours. We build the mixed-reality technology and work alongside your team to extend the game you already have.</p>
-      <ul class="p-caps">
-        <li class="p-cap">
-          <h3>Your game stays yours</h3>
-          <p>Your cards, rules, characters, art and brand remain yours. We add the technology that brings them to life.</p>
-        </li>
-        <li class="p-cap">
-          <h3>Built around your game</h3>
-          <p>Mixed reality should play like your game, not ours. A pilot starts from your cards, rules and mechanics.</p>
-        </li>
-        <li class="p-cap">
-          <h3>Working together</h3>
-          <p>We shape each pilot with your team: what comes into mixed reality first, and what comes next.</p>
-        </li>
-      </ul>
+    <section class="p-sec p-own" id="partners" aria-labelledby="own-title">
+      <div class="p-own__head">
+        <h2 class="h2" id="own-title">Your game stays yours.</h2>
+        <p class="lede">CardAlive builds the mixed-reality technology and works with your team to extend the game you already have. We aren't making a trading-card game of our own.</p>
+      </div>
+      <dl class="p-terms">
+        <div class="p-terms__row">
+          <dt>Your cards, your brand</dt>
+          <dd>Your cards, rules, characters, art and brand remain yours. We add the technology that brings them to life.</dd>
+        </div>
+        <div class="p-terms__row">
+          <dt>Built around your game</dt>
+          <dd>Mixed reality should play like your game. A pilot starts from your cards, rules and&nbsp;mechanics.</dd>
+        </div>
+        <div class="p-terms__row">
+          <dt>Shaped with your team</dt>
+          <dd>We decide together what comes into mixed reality first, and what comes next.</dd>
+        </div>
+      </dl>
     </section>
 
-    <section class="p-section" id="prototypes" aria-labelledby="proto-title">
-      <p class="rune-label">Current capabilities</p>
-      <h2 class="h2" id="proto-title">See What CardAlive Can Do</h2>
-      <p class="lede">Our original prototypes demonstrate the technology we're developing for existing trading-card games. These are capability demonstrations, not a separate TCG.</p>
-
-      <div class="p-demos">
-        <article class="p-demo">
-          <button class="vframe" type="button" data-src="../assets/video/where-we-are-now.mp4" data-poster="../assets/video/where-we-are-now.jpg" aria-label="Play Prototype 01, AR Card Battles, 1 minute 5 seconds">
+    <section class="p-sec" id="prototypes" aria-labelledby="proto-title">
+      <div class="p-sec__head">
+        <h2 class="h2" id="proto-title">See what CardAlive can do</h2>
+        <p class="lede">Two prototypes, built with our own original characters, show the technology we're developing for existing trading-card games.</p>
+      </div>
+      <div class="p-plates">
+        <article class="plate plate--lead">
+          <button class="frame vframe" type="button" data-src="../assets/video/where-we-are-now.mp4" data-poster="../assets/video/where-we-are-now.jpg" aria-label="Play Prototype 01, AR Card Battles, 1 minute 5 seconds">
             <img src="../assets/img/prototype-01.jpg" width="960" height="540" alt="" loading="lazy" decoding="async" />
-            <span class="demo__play" aria-hidden="true"></span>
+            <span class="chip" aria-hidden="true"><svg class="ico ico--fill"><use href="#i-play" /></svg>1:05</span>
           </button>
-          <div class="p-demo__body">
-            <h3 class="demo__title">Prototype 01 &middot; AR Card Battles</h3>
-            <p class="demo__len">1 minute 5 seconds &middot; recorded in-headset</p>
-            <p class="demo__text">Physical cards summon interactive 3D characters and trigger animated battles.</p>
-          </div>
+          <h3 class="h3 plate__title">AR Card Battles</h3>
+          <p class="plate__meta">Prototype 01 &middot; recorded in-headset</p>
+          <p class="plate__text">Printed cards on a real table summon 3D characters that take turns and battle.</p>
         </article>
-        <article class="p-demo">
-          <button class="vframe" type="button" data-yt="3THAZpt9uw8" data-yt-title="Prototype 02: Every Character Has a World" aria-label="Play Prototype 02, Kishi City, 1 minute 16 seconds">
+        <article class="plate">
+          <button class="frame vframe" type="button" data-yt="3THAZpt9uw8" data-yt-title="Prototype 02: Every Character Has a World" aria-label="Play Prototype 02, Kishi City, 1 minute 16 seconds">
             <img src="../assets/img/prototype-02.jpg" width="640" height="360" alt="" loading="lazy" decoding="async" />
-            <span class="demo__play" aria-hidden="true"></span>
+            <span class="chip" aria-hidden="true"><svg class="ico ico--fill"><use href="#i-play" /></svg>1:16</span>
           </button>
-          <div class="p-demo__body">
-            <h3 class="demo__title">Prototype 02 &middot; Kishi City</h3>
-            <p class="demo__len">1 minute 16 seconds</p>
-            <p class="demo__text">Interactive characters, explorable environments, and immersive world-building.</p>
-          </div>
+          <h3 class="h3 plate__title">Kishi City</h3>
+          <p class="plate__meta">Prototype 02 &middot; in development</p>
+          <p class="plate__text">A character, the world built around him, and a city to explore.</p>
         </article>
       </div>
       <p class="art-note">Prototype card artwork is AI-assisted placeholder art for this proof of concept, not final artwork. Publisher experiences use each game's original card art, characters and creative identity.</p>
     </section>
 
-    <section class="p-section" aria-labelledby="caps-title">
-      <p class="rune-label">What the prototypes demonstrate</p>
-      <h2 class="h2" id="caps-title">The technology layer</h2>
-      <ul class="p-caps">
-        <li class="p-cap">
-          <h3>Physical cards, recognized</h3>
-          <p>Meta Quest 3 recognizes a printed card on a real table and places its character on it in 3D.</p>
-          <span class="p-cap__src">Prototype 01</span>
-        </li>
-        <li class="p-cap">
-          <h3>Battles in the room</h3>
-          <p>Summoned characters take turns, attack and react, with health and battle text anchored to the table.</p>
-          <span class="p-cap__src">Prototype 01</span>
-        </li>
-        <li class="p-cap">
-          <h3>Characters with a world</h3>
-          <p>Beyond the table, a character can open into an explorable environment built around them.</p>
-          <span class="p-cap__src">Prototype 02</span>
-        </li>
-      </ul>
-
-      <div class="panel p-where">
-        <h3>Where we are</h3>
-        <p>CardAlive is in development for Meta Quest 3. The prototypes show what the technology does today, with our own original characters standing in for yours. It does not yet bring every existing game over in full. A pilot is how we find out what yours needs: we start with a small set of your cards, characters and mechanics, bring them into mixed reality, and decide together what comes next.</p>
+    <section class="p-sec" aria-labelledby="tech-title">
+      <h2 class="h2" id="tech-title">What the technology does today</h2>
+      <table class="p-table">
+        <thead>
+          <tr><th scope="col">Capability</th><th scope="col">What happens</th><th scope="col">Shown in</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Physical cards, recognized</th>
+            <td>Meta Quest 3 recognizes a printed card on a real table and places its character on it in 3D.</td>
+            <td>Prototype 01</td>
+          </tr>
+          <tr>
+            <th scope="row">Battles in the room</th>
+            <td>Summoned characters take turns, attack and react, with health and battle text anchored to the table.</td>
+            <td>Prototype 01</td>
+          </tr>
+          <tr>
+            <th scope="row">Characters with a world</th>
+            <td>Beyond the table, a character can open into an explorable environment built around them.</td>
+            <td>Prototype 02</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="p-where">
+        <h3 class="h3 p-where__title">Where we are</h3>
+        <p>CardAlive is in development for Meta Quest 3. The prototypes show what the technology does today, with our own original characters standing in for yours. It does not yet bring every existing game over in full. A pilot is how we find out what yours needs.</p>
       </div>
     </section>
 
-    <section class="p-section p-pilot" id="pilot" aria-labelledby="pilot-title">
-      <p class="rune-label">Explore a Pilot</p>
-      <h2 class="h2" id="pilot-title">Bring your game to the table.</h2>
-      <p class="lede">Tell us about your game. We will write back to set up a call and shape a pilot together.</p>
-
-      <form class="panel pilot" action="https://formsubmit.co/cardalive@protonmail.com" method="post" novalidate
-            data-raven data-subject="CardAlive pilot inquiry">
-        <p class="pilot__done" data-done="Thank you." aria-hidden="true"></p>
-        <div class="pilot__fields">
-          <label class="pilot__field">
-            <span>Work email <b aria-hidden="true">*</b></span>
-            <input class="pilot__input" name="email" type="email" inputmode="email" autocomplete="email"
-                   placeholder="you@publisher.com" maxlength="254" required />
-          </label>
-          <label class="pilot__field">
-            <span>Company or game</span>
-            <input class="pilot__input" name="company" type="text" autocomplete="organization" maxlength="200" />
-          </label>
-          <label class="pilot__field pilot__field--wide">
-            <span>What would you like to see in mixed reality?</span>
-            <textarea class="pilot__input" name="message" rows="4" maxlength="4000"></textarea>
-          </label>
-          <button class="btn btn--blaze pilot__send" type="submit"><span>Explore a Pilot</span><span class="btn__arrow" aria-hidden="true">&rarr;</span></button>
+    <section class="p-pilot" id="pilot" aria-labelledby="pilot-title">
+      <div class="p-pilot__inner">
+        <div class="p-pilot__copy">
+          <h2 class="h2" id="pilot-title">Bring your game to the table.</h2>
+          <p class="lede">Tell us about your game and what you'd like to see in mixed reality.</p>
+          <ol class="p-steps">
+            <li><span><b>Write to us.</b> Use this form. We reply by email to set up a call.</span></li>
+            <li><span><b>Start small.</b> A pilot begins with a few of your cards, characters and mechanics.</span></li>
+            <li><span><b>Decide together.</b> Your team sees them in mixed reality, and we agree on what comes next.</span></li>
+          </ol>
         </div>
-        <input type="hidden" name="source" value="Publishers (Explore a Pilot)" />
-        <input class="raven__honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <p class="raven__status" role="status" data-done="We will write to {email} to set up a call."></p>
-      </form>
+
+        <form class="pilot" action="https://formsubmit.co/cardalive@protonmail.com" method="post" novalidate
+              data-raven data-subject="CardAlive pilot inquiry">
+          <p class="pilot__done" data-done="Thank you." aria-hidden="true"></p>
+          <div class="pilot__fields">
+            <label class="pilot__field">
+              <span>Work email <b aria-hidden="true">*</b></span>
+              <input class="pilot__input" name="email" type="email" inputmode="email" autocomplete="email"
+                     placeholder="you@publisher.com" maxlength="254" required />
+            </label>
+            <label class="pilot__field">
+              <span>Company or game</span>
+              <input class="pilot__input" name="company" type="text" autocomplete="organization" maxlength="200" />
+            </label>
+            <label class="pilot__field pilot__field--wide">
+              <span>What would you like to see in mixed reality?</span>
+              <textarea class="pilot__input" name="message" rows="4" maxlength="4000"></textarea>
+            </label>
+            <button class="btn btn--gold pilot__send" type="submit">Explore a pilot<svg class="ico ico--go" aria-hidden="true"><use href="#i-go" /></svg></button>
+          </div>
+          <input type="hidden" name="source" value="Publishers (Explore a Pilot)" />
+          <input class="raven__honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <p class="raven__status" role="status" data-done="We will write to {email} to set up a call."></p>
+        </form>
+      </div>
     </section>
   </main>
 
   <footer class="p-foot">
-    <p class="p-foot__players">Here to play? <a href="../#waitlist">Join the player waitlist</a></p>
-    <p class="fine">&copy; <span id="year">2026</span> CardAlive &middot; In development for Meta Quest 3 &middot; Unreleased; everything shown is a work in progress. &middot; <a href="mailto:cardalive@protonmail.com">cardalive@protonmail.com</a></p>
+    <a class="p-foot__brand" href="../" aria-label="CardAlive home"><img src="../assets/img/logo.png" alt="CardAlive" width="1704" height="923" loading="lazy" /></a>
+    <p class="p-foot__players inline">Here to play? <a href="../#waitlist">Join the player waitlist</a></p>
+    <p class="fine">&copy; <span id="year">2026</span> CardAlive &middot; In development for Meta Quest 3 &middot; Unreleased; everything shown is a work in progress &middot; <a href="mailto:cardalive@protonmail.com">cardalive@protonmail.com</a></p>
   </footer>
 
   <script src="../assets/js/forms.js" defer></script>

@@ -46,35 +46,9 @@
   var yearEl = $('#year'); if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
   /* ------------------------------------------------------------
-     Split headings into words that rise one by one
-     ------------------------------------------------------------ */
-  $$('[data-split]').forEach(function (el) {
-    var i = 0;
-    (function walk(node) {
-      Array.prototype.slice.call(node.childNodes).forEach(function (child) {
-        if (child.nodeType === 3) {
-          var frag = document.createDocumentFragment();
-          child.textContent.split(/(\s+)/).forEach(function (part) {
-            if (!part) return;
-            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
-            var w = document.createElement('span'); w.className = 'w';
-            var inner = document.createElement('span'); inner.textContent = part;
-            inner.style.setProperty('--i', i++);
-            w.appendChild(inner); frag.appendChild(w);
-          });
-          child.parentNode.replaceChild(frag, child);
-        } else if (child.nodeType === 1) {
-          walk(child);
-        }
-      });
-    })(el);
-  });
-
-  /* ------------------------------------------------------------
      Scenes
      ------------------------------------------------------------ */
   var scenes = $$('.scene');
-  var ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
   var index = -1, locked = false;
   var hint = $('#hint');
   if (window.matchMedia('(pointer: coarse)').matches) $('span', hint).textContent = 'Swipe';
@@ -82,7 +56,7 @@
   var railEl = $('#rail');
   scenes.forEach(function (sc, i) {
     var li = document.createElement('li');
-    li.innerHTML = '<button type="button" data-goto="' + i + '"><span class="rail__t">' + sc.dataset.title + '</span><span class="rail__n">' + ROMAN[i] + '</span></button>';
+    li.innerHTML = '<button type="button" data-goto="' + i + '"><span class="rail__t">' + sc.dataset.title + '</span></button>';
     railEl.appendChild(li);
   });
   var railItems = $$('li', railEl);
@@ -123,7 +97,11 @@
     S.corrTarget = parseFloat(to.dataset.corr || '0.1');
     teaserSync();
 
-    railItems.forEach(function (li, k) { li.classList.toggle('is-here', k === i); });
+    railItems.forEach(function (li, k) {
+      li.classList.toggle('is-here', k === i);
+      var b = li.firstChild;
+      if (k === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+    });
     document.body.dataset.scene = to.id;
     hint.classList.toggle('is-on', i === 0);
     if (!opts.silent) {
@@ -347,21 +325,9 @@
   })();
 
   /* ------------------------------------------------------------
-     Boot
+     Boot. The text shows at once over the night; the city fades in behind it when ready.
      ------------------------------------------------------------ */
-  var summoning = $('#summoning');
-  var bootAt = performance.now(), lifted = false;
-  function lift() {
-    if (lifted) return; lifted = true;
-    var wait = STILL ? 0 : Math.max(0, 1100 - (performance.now() - bootAt));
-    setTimeout(function () {
-      summoning.classList.add('is-done');
-      document.body.classList.add('is-loaded');
-    }, wait);
-  }
-  document.addEventListener('ca:ready', lift);
-  document.addEventListener('ca:fail', function () { document.body.classList.add('no-webgl'); lift(); });
-  setTimeout(lift, STILL ? 0 : 4500);
+  document.addEventListener('ca:fail', function () { document.body.classList.add('no-webgl'); });
   // the city's module comes from a CDN; if it never starts, paint the fallback sky
   setTimeout(function () { if (!S.worldStarted) document.body.classList.add('no-webgl'); }, 6000);
 
