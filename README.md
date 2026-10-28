@@ -77,13 +77,50 @@ screen (small phones) scrolls inside itself first, then pages.
 
 Sound is synthesised with WebAudio and stays off until the visitor presses **Sound**.
 
+## The city's models
+
+The city is built once, from fixed seeds, out of a small kit of modelled pieces in `world.js`
+(`piece()`), each drawn as one instanced mesh:
+
+- **Houses**: walls, a steep gabled or low hipped slate roof, a cornice on about half, chimneys on
+  the ridge, gabled dormers on steep roofs, now and then an octagonal stair turret on a corner.
+- **Towers**: shaft, clasping corner piers, a parapet with gabled corner pinnacles, and an
+  octagonal spire on an open belfry lantern with four lucarnes. A few spires are verdigris copper.
+- **The Cathedral**: the same massing as before, so the glass, door, roots and beam still line up,
+  rebuilt with stepped buttresses and pinnacles, belfry spires, lead roofs with real gables, a
+  polygonal apse with radiating piers, and flying buttresses down the nave.
+
+The street plan (which cells hold a house or a tower, and their sizes) still comes from the
+original seed, so the camera keyframes frame the same city. How each block is dressed draws from a
+second seed (`rd`), so it can change without moving any street.
+
+One stone shader (`TOWN_FRAG`) dresses every piece. Walls are told from roofs by their slope.
+Windows are pointed lancets laid out per face in the piece's own metres, so every wall gets whole
+windows centred on it; the Cathedral gets blind arcading from the same layout. Roofs get slate
+courses (or lead seams), spires get ribs and crocket bands, walls get coursed stone and quoins.
+Each material compiles only the parts it uses (`WINDOWS`, `BLIND`, `SIDES8`, `ROOF`).
+
+GPU cost, against the old box-and-pyramid city:
+
+- The big pieces (walls, roofs, spires) go into a **depth pre-pass** first, so the stone shader
+  runs about once per visible pixel instead of once per layer of town behind it. Tile-based GPUs
+  (phones, tablets, Apple silicon) already do this in hardware and skip the pre-pass (`TILER`).
+- The **sky draws after the city**, so its cloud noise only runs where sky shows, and the moon's
+  crater noise only runs on the moon. The ground's corruption veins only run inside their reach.
+  The old sky ran eight octaves of noise on every pixel before the city covered most of them.
+- The **mist** is one draw instead of 34 sprites.
+- Instances are sorted near-first (every camera looks north), and chimneys and dormers sink away
+  past `LOD` metres.
+- The trade is geometry: about 190k triangles a frame instead of 88k, which is small next to the
+  pixel work saved.
+
 ## Image quality
 
 - The post chain (bloom, tone mapping) renders into its own targets, so the canvas `antialias`
   flag would do nothing; the composer's targets are multisampled instead (4x, 2x on small screens).
-- Windows, cobbles, box edges, blueprint grids and the conduit rings are procedural. Each is
-  filtered with `fwidth`: crisp up close, faded to its average once it shrinks toward a pixel.
-  Without that they moire and sparkle in the far and top-down views.
+- Windows, glazing bars, sills, stone courses, quoins, slates, spire ribs, cobbles, blueprint grids
+  and the conduit rings are procedural. Each is filtered: crisp up close, faded to its average once
+  it shrinks toward a pixel. Without that they moire and sparkle in the far and top-down views.
 - Lamps and embers fade instead of flickering when they are smaller than a pixel or two.
 
 ## Fallbacks
@@ -93,8 +130,8 @@ Sound is synthesised with WebAudio and stays off until the visitor presses **Sou
 - Motion is **on by default**, even for `prefers-reduced-motion: reduce` (including Windows with
   *Animation effects* off). Those visitors get a **Reduce motion** button in the nav, remembered in
   `localStorage` (`ca-motion`). Reduced, the camera dissolves through dark and cuts instead of
-  flying; no lightning or drifting embers, text fades without moving, and the hero teaser shows a
-  still frame.
+  flying; no lightning, drifting embers or drifting mist, text fades without moving, and the hero
+  teaser shows a still frame.
 - Slow GPUs: the renderer drops its pixel ratio after sustained slow frames. Small screens get a
   sparser city and fewer embers.
 - `/publishers/` has no live city: its hero is a still frame of it (`assets/img/city-cathedral.jpg`,
@@ -116,6 +153,7 @@ Debug query parameters:
 | `?cam=<scene id>` | open on a scene |
 | `?timescale=0.1` | slow the camera flights down to inspect them |
 | `?nowebgl` | preview the no-WebGL fallback |
+| `?gputime` | log the GPU's time per frame to the console every 120 frames (Chrome; needs `EXT_disjoint_timer_query_webgl2`) |
 
 Headless Chrome will not lay out narrower than about 500 px. For phone widths, screenshot a page
 that holds the site in a 390 px `<iframe>`.
