@@ -27,7 +27,7 @@ no build step.
 | Path | File | What it is |
 |---|---|---|
 | `/` | `index.html` | the stage: four full-screen scenes over the real-time city |
-| `/publishers/` | `publishers/index.html` | a plain scrolling page: the signature line and "Your game. Our technology." over a still of the city, Your game stays yours, both demos inline, the capability table, where we are, the Explore a Pilot form on a raised band |
+| `/publishers/` | `publishers/index.html` | a plain scrolling page: the signature line and "Your game. Our technology." over a still of the city, Your game stays yours, the three prototypes inline, the capability table, where we are, the Explore a Pilot form on a raised band |
 | `/contact/` | `contact/index.html` | redirects to `/#contact`, shows the address without JavaScript |
 
 ## How the home page works
@@ -39,20 +39,20 @@ over the roofs while the text dissolves out and re-forms.
 
 | # | Scene (`id`) | Camera (`data-cam`) | What's in it |
 |---|---|---|---|
-| I | `hero` | `hero` | HUD tags top; the trailer loop in a viewfinder on the right; across the bottom the signature line, lede, For publishers (and Watch the trailer when the viewfinder is hidden), the player waitlist link |
-| II | `prototypes` | `scale-table` | See what CardAlive can do: two prototype panels of unequal width, each opens its video in a dialog; the artwork note |
-| III | `waitlist` | `finale` | the tagline as a full-width band that slides in with the scroll, "Be first to play." and a HUD panel with the waitlist field and a line to the publishers page |
+| I | `hero` | `hero` | a HUD tag top left; the trailer loop in a viewfinder on the right; across the bottom the signature line, lede, For publishers (and Watch the trailer when the viewfinder is hidden), the player waitlist link |
+| II | `prototypes` | `scale-table` | See what CardAlive can do: three prototype panels of one size, each opens its video in a dialog; the artwork note |
+| III | `waitlist` | `finale` | the tagline in a full-width band, fitted to the screen by `fit.js`, that slides in with the scroll and rests whole, "Be first to play." and a HUD panel with the waitlist field and a line to the publishers page |
 | IV | `contact` | `contact` | contact email field ("Send a raven"), fine print |
 
 Camera keyframes live in `KF` in `world.js`. It still holds the keyframes for the old district tour
 and scales, which nothing uses now. To add a scene, add a `<section class="scene">` with `data-cam`,
 `data-corr` and `data-title`, and its keyframe. Then renumber the `data-goto` indexes in `index.html`.
 The rail on the right is built from each scene's `data-title` and numbered; a gold marker slides to
-the current scene.
+the current scene. Only the current scene is named until the rail is hovered or focused.
 
 The HUD is decorative and `aria-hidden`: corner brackets on the viewport (`.hud-frame`, they pull in
 and turn gold while `body.is-flying`), a scan line that crosses the screen in the direction of travel
-on each cut (`#scan`), and a readout bottom-right with the scene number and the real camera position,
+on each cut (`#scan`), and a readout bottom-right with the real camera position,
 read from `CA.cam` (world.js sets it to `camera.position`). Labels marked `data-decode` scramble into
 place when their scene arrives. Reduced motion turns the sweep and the decoding off.
 
@@ -183,6 +183,7 @@ at `&`. A clean scan prints nothing.
 | Trailer, 40 s | hero button, hero teaser | `assets/video/cardalive-trailer.mp4` (+ `-loop.mp4` teaser, `.jpg` poster) |
 | Prototype 01 · AR Card Battles, 1:05 | scene II dialog, `/publishers/` inline | `assets/video/where-we-are-now.mp4`, the tabletop card battle recorded in-headset. Thumbnail `assets/img/prototype-01.jpg` |
 | Prototype 02 · Kishi City, 1:16 | scene II dialog, `/publishers/` inline | YouTube, unlisted on the CardAlive channel: `3THAZpt9uw8` ("Prototype 02: Every Character Has a World"). Thumbnail `assets/img/prototype-02.jpg` is YouTube's 640×480 `sddefault` frame with the letterbox cropped off |
+| Prototype 03 · Walk with Kishi, 2:05 | scene II dialog, `/publishers/` inline | `assets/video/walk-with-kishi.mp4`, the CardAlive Tutorial build (`com.cardalive.sgcitywalk.master`) recorded in-headset on 2026-10-29: Kishi's city projected onto a desk, then the walk with him and the bridge carry. Re-encoded from the Quest's HEVC to H.264 720p30 (the command below, plus `fps=30`). Poster `assets/video/walk-with-kishi.jpg` and thumbnail `assets/img/prototype-03.jpg` are the 0:23 frame |
 
 YouTube loads only when a visitor presses play: the scene II dialog builds the player when it opens
 and removes it on close, and `/publishers/` swaps the still for the player in place
@@ -211,11 +212,12 @@ ffmpeg -i raw.mp4 -vf scale=-2:720 -c:v libx264 -profile:v high -pix_fmt yuv420p
 ```
 
 Several city source packs in the game repo are still marked `LICENSE_REVIEW_REQUIRED`
-(`CardAlive/Environments/ATTRIBUTION.md`). In-engine captures of the city are on the site in two
+(`CardAlive/Environments/ATTRIBUTION.md`). In-engine captures of the city are on the site in three
 places only. The first is the trailer's two in-engine shots (0:26–0:30 of the 40 s cut, Kishi in the
 alley and the city diorama), live since 2026-10-13 on the owner's call. The second is Prototype 02's
-video and thumbnail, which the 2026-10-21 redesign brief asked for. If a pack turns out to forbid
-this, re-cut the trailer and the Prototype 02 video without it, and pick another thumbnail.
+video and thumbnail, which the 2026-10-21 redesign brief asked for. The third is Prototype 03's video,
+poster and thumbnail, added on the owner's request on 2026-10-29. If a pack turns out to forbid
+this, re-cut the trailer and the Prototype 02 and 03 videos without it, and pick other thumbnails.
 
 ## Forms: waitlist, contact, pilot
 
@@ -253,7 +255,7 @@ assets/js/world.js         the city (three.js module)
 assets/img/                logo, favicon, share image, prototype thumbnails, fallback skyline,
                            city-cathedral.jpg (the /publishers/ hero)
 DESIGN.md                  tokens and rules for the look
-assets/video/              trailer, Prototype 01, poster frames
+assets/video/              trailer, Prototypes 01 and 03, poster frames
 CNAME                      cardalive.xyz — deleting it drops the custom domain
 ```
 

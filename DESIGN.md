@@ -19,62 +19,62 @@ colors:
 typography:
   signature:
     fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
-    fontSize: "fitted to the width (fit.js), at most 24vh"
+    fontSize: "fitted to the width (fit.js), at most 21vh"
     fontWeight: 800
     fontStretch: "62%"
     lineHeight: 0.84
     textTransform: uppercase
   kick:
     fontFamily: "Newsreader, Georgia, serif"
-    fontSize: "clamp(1.625rem, 0.9rem + 2.2vw, 3.5rem)"
+    fontSize: "clamp(1.375rem, 0.8rem + 1.9vw, 2.875rem)"
     fontStyle: italic
     fontWeight: 400
     lineHeight: 1.05
   headline:
     fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
-    fontSize: "clamp(2.75rem, 1.2rem + 4.4vw, 6rem)"
+    fontSize: "clamp(2.25rem, 1rem + 3.6vw, 4.75rem)"
     fontWeight: 800
     fontStretch: "62%"
     lineHeight: 0.88
     textTransform: uppercase
   title:
     fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
-    fontSize: "clamp(1.75rem, 1.1rem + 1.6vw, 2.75rem)"
+    fontSize: "clamp(1.375rem, 1rem + 1vw, 2rem)"
     fontWeight: 800
     fontStretch: "62%"
     lineHeight: 0.92
     textTransform: uppercase
   lede:
     fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
-    fontSize: "clamp(1.125rem, 1.02rem + 0.3vw, 1.3125rem)"
+    fontSize: "clamp(1rem, 0.95rem + 0.25vw, 1.1875rem)"
     fontWeight: 400
     lineHeight: 1.5
   body:
     fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
-    fontSize: "1.0625rem"
+    fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.55
   hud:
     fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
     fontSize: "12px"
     fontWeight: 600
-    fontStretch: "125%"
-    letterSpacing: "0.14em"
+    fontStretch: "112%"
+    letterSpacing: "0.1em"
     textTransform: uppercase
   button:
     fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
-    fontSize: "13px"
+    fontSize: "12px"
     fontWeight: 600
-    fontStretch: "125%"
-    letterSpacing: "0.12em"
+    fontStretch: "112%"
+    letterSpacing: "0.1em"
     textTransform: uppercase
   input:
     fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
-    fontSize: "18px"
+    fontSize: "17px"
     fontWeight: 400
   fine:
     fontFamily: "Archivo, Segoe UI, system-ui, sans-serif"
-    fontSize: "13px"
+    fontSize: "12px"
     fontWeight: 400
     lineHeight: 1.5
 rounded:
@@ -82,36 +82,36 @@ rounded:
   chamfer: "7px, two corners (top-left, bottom-right)"
 spacing:
   gutter: "clamp(16px, 4.5vw, 72px)"
-  rail: "150px"
+  rail: "140px"
 components:
   button-primary:
     backgroundColor: "{colors.gold}"
     textColor: "{colors.gold-ink}"
     shape: chamfer
-    height: "52px"
-    padding: "0 24px"
+    height: "46px"
+    padding: "0 20px"
   button-primary-hover:
     backgroundColor: "{colors.gold-hi}"
   button-line:
     backgroundColor: "{colors.night} / 0.6"
     textColor: "{colors.bone}"
     border: "1px {colors.line}, brackets {colors.bone-2}, gold on hover"
-    height: "52px"
+    height: "46px"
   field:
     backgroundColor: "{colors.night} / 0.6"
     textColor: "{colors.bone}"
     border: "underline {colors.bone-3}, gold on focus"
-    height: "56px"
+    height: "50px"
   panel:
     backgroundColor: "#000 under the footage"
-    border: "1px {colors.line}, brackets inset 10px"
+    border: "1px {colors.line}, brackets inset 8px"
   hudbox:
     backgroundColor: "{colors.night-2} / 0.9"
     border: "1px {colors.line}, brackets {colors.bone-2}, a header bar of HUD labels"
   chip:
     backgroundColor: "{colors.night} / 0.85"
     shape: chamfer
-    height: "34px"
+    height: "30px"
 ---
 
 # CardAlive design
@@ -148,8 +148,9 @@ Dimension." is the largest text on both pages: no other line may be set bigger.
   - 62%, weight 800, uppercase: the signature line, headings (`.h2`), titles (`.h3`, panel titles,
     the band). Line height under 0.9.
   - 100%, weight 400: reading text. Weight 600 for emphasis.
-  - 125%, weight 600, uppercase, tracked 0.12 to 0.14em, 12 to 13px: HUD labels, nav, buttons, chips,
-    the rail, the readout, form labels, table heads.
+  - 112% (`--wide`), weight 600, uppercase, tracked 0.1em (`--track`), 12px: HUD labels, nav,
+    buttons, chips, the rail, the readout, form labels, table heads. One width, one tracking, one
+    size for all of them.
 - **Newsreader italic** only for the line that sits on top of a display line: "Every card game
   deserves", and the `<em>` that opens a heading ("See what", "Get in", "Be first"). It is 0.46em of
   its heading, or the kick size on the signature. Never a whole headline.
@@ -160,11 +161,14 @@ Dimension." is the largest text on both pages: no other line may be set bigger.
 
 - Home scenes pad by `gutter` on the left and `gutter + rail` on the right, so text never runs under
   the rail or the readout.
-- Hero: HUD tags top left and right, the trailer viewfinder on the right, the signature line across
-  the bottom with the lede (7) and the actions (5) under it. Prototypes: heading and lede, then two
-  panels 7/5, then the pilot link and the art note. Waitlist: the band full-bleed, then the heading
+- Hero: one HUD tag top left, the trailer viewfinder on the right, the signature line across
+  the bottom with the lede (7) and the actions (5) under it. Prototypes: heading and lede, then three
+  panels of one size, then the pilot link and the art note. Waitlist: the band full-bleed, then the heading
   (6) and the box (5). Contact: left over the cathedral, fine print along the bottom.
-- Every scene must fit 1280×720 without scrolling.
+- Every scene must fit 1280×590 without scrolling (a 1280×720 laptop at 150% scaling, minus the
+  browser's own bar), and tablets in portrait. Only phones and landscape phones scroll a scene.
+- Keep it compact: one HUD tag on the hero, no crosshairs, one readout. When something new is added,
+  take something away.
 - `/publishers/` sections sit in a 1160px column with 80–140px between sections.
 - Phones: one column, the signature splits onto two lines, the scene scrolls inside itself before it
   pages.
@@ -202,17 +206,17 @@ No radii. Two marks instead:
 - **Buttons**: gold (primary, chamfered) or line (secondary, translucent night, `line` border and
   brackets). Wide-cap labels. Icons are Lucide paths in the page's SVG sprite, 16px, stroke 2. The
   arrow nudges 3px on hover.
-- **Panel**: a prototype still with its outline numeral top left, a HUD tag top right, the title and
-  one sentence bottom left, the duration chip bottom right. Opens the footage dialog.
+- **Panel**: a prototype still with its outline numeral top left and the duration chip top right; at
+  the bottom a HUD tag, the title and one sentence. Opens the footage dialog.
 - **Viewfinder**: the hero's trailer loop inside brackets, with a HUD bar under it.
 - **HUD box**: `night-2`, `line` border, brackets, a header bar of HUD labels with a gold diamond.
   Holds the waitlist form and the pilot form.
 - **Field**: input on an underline plus a chamfered gold send button; the underline turns gold on
   focus.
-- **Rail**: names and numbers on a 1px track; a gold marker slides to the current scene. Names hide
-  under 1000px.
-- **Readout**: bottom right, the scene number and name and the camera's X / Y / Z. Hidden under
-  1000px and without WebGL.
+- **Rail**: numbers on a 1px track; a gold marker slides to the current scene, and only its name
+  shows until the rail is pointed at. Names hide under 1000px.
+- **Readout**: bottom right, the camera's X / Y / Z. Hidden under 1000px and without WebGL.
+- **Band**: the tagline, fitted to the content width so it rests whole; stacked on phones.
 
 ## Do's and Don'ts
 

@@ -62,10 +62,9 @@
   });
   var railItems = $$('li', railEl);
 
-  /* HUD: the scan line that crosses the screen on a cut, the readout bottom-right, and
-     labels that decode into place when their scene arrives. All decorative (aria-hidden). */
-  var scan = $('#scan'), roN = $('#ro-n'), roName = $('#ro-name'), roCam = $('#ro-cam');
-  $('#ro-of').textContent = pad(scenes.length);
+  /* HUD: the scan line that crosses the screen on a cut, the camera readout bottom-right,
+     and labels that decode into place when their scene arrives. All decorative (aria-hidden). */
+  var scan = $('#scan'), roCam = $('#ro-cam');
   var GLYPHS = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789#/+<>';
   function decode(el) {
     var text = el.dataset.text || (el.dataset.text = el.textContent);
@@ -130,9 +129,6 @@
     railEl.style.setProperty('--i', i);
     document.body.dataset.scene = to.id;
     hint.classList.toggle('is-on', i === 0);
-    roN.textContent = pad(i + 1);
-    roName.dataset.text = to.dataset.title;
-    decode(roName);
     $$('[data-decode]', to).forEach(decode);
     if (!opts.silent) {
       try { history.replaceState(null, '', i === 0 ? location.pathname + location.search : '#' + to.id); } catch (err) {}
