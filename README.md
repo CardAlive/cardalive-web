@@ -27,7 +27,7 @@ no build step.
 | Path | File | What it is |
 |---|---|---|
 | `/` | `index.html` | the stage: four full-screen scenes over the real-time city |
-| `/publishers/` | `publishers/index.html` | a plain scrolling page: the signature line and "Your game. Our technology." over a still of the city, Your game stays yours, the three prototypes inline, the capability table, where we are, the Explore a Pilot form on a raised band |
+| `/publishers/` | `publishers/index.html` | a plain scrolling page that sells one offer, a private four-card proof of concept: the signature line and "Bring four of your cards to life." over a still of the city; what's in a proof (a hand of four blank cards beside the terms: four characters, permitted assets, private, your game stays yours); how it works (four steps on a track, the first three private, the fourth only by mutual interest); the three prototypes inline and where we are; beyond the proof (an illustrated shared-screen booth and three longer-term directions); the pilot form with the proof at a glance, on a raised band |
 | `/contact/` | `contact/index.html` | redirects to `/#contact`, shows the address without JavaScript |
 
 ## How the home page works
@@ -250,7 +250,7 @@ assets/css/publishers.css  publisher page layout, scrolling, pilot form
 assets/js/main.js          scenes, input, HUD (rail, readout, scan, decode), footage dialogs, sound
 assets/js/forms.js         email forms (both pages)
 assets/js/fit.js           sizes the signature line to the width (both pages)
-assets/js/publishers.js    in-place video players on /publishers/
+assets/js/publishers.js    in-place video players and the hand's deal on /publishers/
 assets/js/world.js         the city (three.js module)
 assets/img/                logo, favicon, share image, prototype thumbnails, fallback skyline,
                            city-cathedral.jpg (the /publishers/ hero)

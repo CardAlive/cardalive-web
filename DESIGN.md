@@ -123,8 +123,9 @@ A poster set inside a HUD. The home page is a fixed stage of four scenes over a 
 interface reads like a viewfinder over that flight: brackets on the corners of the screen, a scan
 line on every cut, a readout of where the camera is, a rail with a sliding marker. Type does the
 poster work: huge condensed capitals with an italic serif line on top. `/publishers/` is a plain
-scrolling page in the same world: a still frame of the city under the same poster hero, night ink
-below, and the pilot form on a slightly raised band.
+scrolling page in the same world that sells one offer, a private four-card proof of concept: a still
+frame of the city under the same poster hero, night ink below, and the pilot form on a slightly
+raised band.
 
 The page is for persuasion. Publishers should leave knowing CardAlive partners with them and that
 their game stays theirs. Players should leave on the waitlist. "Every Card Game Deserves Another
@@ -138,8 +139,8 @@ Dimension." is the largest text on both pages: no other line may be set bigger.
 - **Bone** (`bone`, `bone-2`, `bone-3`): text, brackets and HUD lines. `bone-2` for body copy, ledes
   and labels, `bone-3` for fine print, the readout and inactive rail numbers.
 - **Gold**: buttons, chips on hover, focus rings, the rail marker and current number, the nav
-  diamond, the bracket colour on hover and in flight, the waitlist heading, "Your game. Our
-  technology." and the diamonds in the band. Text on gold is `gold-ink`, never white.
+  diamond, the bracket colour on hover and in flight, the waitlist heading, "Bring four of
+  your cards to life." and the diamonds in the band. Text on gold is `gold-ink`, never white.
 - No other accent. The city's own lights carry the cyan and violet.
 
 ## Typography
@@ -217,6 +218,15 @@ No radii. Two marks instead:
   shows until the rail is pointed at. Names hide under 1000px.
 - **Readout**: bottom right, the camera's X / Y / Z. Hidden under 1000px and without WebGL.
 - **Band**: the tagline, fitted to the content width so it rests whole; stacked on phones.
+- **Hand** (`/publishers/`): four blank cards fanned, each with its outline index in the corner and
+  an empty art window; the front one reads "Your character". It stands for the four-card proof, so it
+  is never filled with CardAlive's own characters. It deals out once when it scrolls into view.
+- **Track** (`/publishers/`): the four steps on a 1px line with a gold diamond at each. The line
+  breaks before step 04 and its diamond is hollow: the first three are the private proof, the fourth
+  happens only if both sides want it. Vertical on phones.
+- **Booth illustration** (`/publishers/`): flat line drawing of a shared-screen activation in the
+  `night` and `bone` tokens, with the real Prototype 01 frame on its screen. Its labels are chamfered
+  gold pins over the drawing plus a key under it, so they stay readable at phone size.
 
 ## Do's and Don'ts
 

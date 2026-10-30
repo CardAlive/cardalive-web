@@ -89,8 +89,8 @@ input, textarea { caret-color: var(--gold); }
 
 /* Corner brackets: anything that frames gets four L marks, drawn by its ::after.
    --bk colour, --bl leg length, --bi inset (negative sits outside the box). */
-.hud-frame, .btn--line, .tool, .teaser__frame, .panel, .hudbox, .reel, .frame, .pilot { --bk: var(--bone-3); }
-:is(.hud-frame, .btn--line, .tool, .teaser__frame, .panel, .hudbox, .reel, .frame, .pilot)::after {
+.hud-frame, .btn--line, .tool, .teaser__frame, .panel, .hudbox, .reel, .frame, .pilot, .p-scene { --bk: var(--bone-3); }
+:is(.hud-frame, .btn--line, .tool, .teaser__frame, .panel, .hudbox, .reel, .frame, .pilot, .p-scene)::after {
   content: ''; position: absolute; inset: var(--bi, 0); z-index: 2; pointer-events: none;
   background:
     linear-gradient(var(--bk), var(--bk)) left top / var(--bl) 1px,

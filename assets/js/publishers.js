@@ -1,4 +1,4 @@
-/* CardAlive /publishers/ — the two demos play in place.
+/* CardAlive /publishers/ — the prototypes play in place, and the hand of four fans out.
    Each .vframe shows a still until it is clicked, then swaps itself for the
    player: a local <video>, or YouTube (privacy-enhanced) for [data-yt]. */
 (function () {
@@ -6,6 +6,18 @@
 
   var yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  // The hand of four starts stacked when it is below the fold, and fans out as it scrolls into view
+  var hand = document.querySelector('.p-hand');
+  if (hand && window.IntersectionObserver && hand.getBoundingClientRect().top > innerHeight) {
+    hand.classList.add('is-stacked');
+    var io = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      hand.classList.remove('is-stacked');
+      io.disconnect();
+    }, { threshold: 0.5 });
+    io.observe(hand);
+  }
 
   Array.prototype.forEach.call(document.querySelectorAll('.vframe'), function (btn) {
     btn.addEventListener('click', function () {

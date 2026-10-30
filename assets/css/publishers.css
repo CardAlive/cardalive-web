@@ -2,7 +2,8 @@
    CardAlive /publishers/ — a plain scrolling page on top of
    style.css (tokens, buttons, type, frames, fields, HUD). No live
    city here: a still frame of it under the poster hero, night ink
-   below, and the pilot on a slightly raised band.
+   below, and the pilot on a slightly raised band. The page sells
+   one offer: a private four-card proof of concept.
    ============================================================ */
 
 html, body { height: auto; overflow: visible; overscroll-behavior: auto; }
@@ -35,11 +36,29 @@ main, .p-foot { position: relative; z-index: 5; }
 
 /* Sections */
 .p-sec { width: min(1160px, 100%); margin: 0 auto; padding: clamp(72px, 10vh, 120px) var(--gut) 0; }
-.p-sec__head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(24px, 3vw, 48px); align-items: end; margin-bottom: clamp(28px, 4vh, 40px); }
+.p-sec__head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(24px, 3vw, 48px); align-items: end; margin-bottom: clamp(28px, 4vh, 44px); }
 .p-sec__head .lede { font-size: var(--fs-body); }
 
-.p-own { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(32px, 5vw, 80px); align-items: start; }
-.p-own__head .lede { margin-top: 20px; }
+/* What's in a proof: a hand of four blank cards beside the terms */
+.p-proof { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(32px, 5vw, 80px); align-items: center; }
+.p-hand { position: relative; aspect-ratio: 10 / 7; }
+.p-card {
+  position: absolute; left: 50%; bottom: 6%; width: 35%; aspect-ratio: 63 / 88;
+  background: var(--night-2); box-shadow: inset 0 0 0 1px var(--line-2);
+  transform-origin: 50% 130%; transform: translateX(calc(-50% + var(--x))) rotate(var(--r));
+  transition: transform 1s var(--ease-out) calc(var(--i) * 80ms);
+}
+.p-card:nth-child(1) { --x: -66%; --r: -8deg; }
+.p-card:nth-child(2) { --x: -22%; --r: -2.7deg; }
+.p-card:nth-child(3) { --x: 22%; --r: 2.7deg; }
+.p-card:nth-child(4) { --x: 66%; --r: 8deg; box-shadow: inset 0 0 0 1px var(--bone-3); }
+.p-hand.is-stacked .p-card { transform: translateX(-50%) rotate(0deg); }
+/* Each card: its index in the corner (it shows when the hand fans), an empty art window under it */
+.p-card::before { content: ''; position: absolute; inset: 25% 8% 22%; box-shadow: inset 0 0 0 1px var(--line); }
+.p-card::after { content: ''; position: absolute; top: 10%; right: 10%; width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg); }
+.p-card__n { position: absolute; top: 7%; left: 9%; font-weight: 800; font-stretch: 62%; font-size: clamp(28px, 2.8vw, 40px); line-height: 0.8; color: transparent; -webkit-text-stroke: 1.25px oklch(0.94 0.018 85 / 0.85); }
+.p-card__label { position: absolute; inset: 25% 8% 22%; display: grid; place-items: center; text-align: center; line-height: 1.3; color: var(--bone-2); }
+
 .p-terms { counter-reset: term; border-top: 1px solid var(--line-2); }
 .p-terms__row { counter-increment: term; display: grid; grid-template-columns: 44px minmax(0, 2fr) minmax(0, 3fr); gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--line); }
 .p-terms__row::before {
@@ -49,38 +68,75 @@ main, .p-foot { position: relative; z-index: 5; }
 .p-terms dt { font-weight: 800; font-stretch: 62%; font-size: var(--fs-h3); line-height: 0.95; text-transform: uppercase; }
 .p-terms dd { color: var(--bone-2); }
 
+/* How it works: four steps on one track. The first three are the private proof;
+   the track breaks before the fourth, whose diamond is hollow. */
+.p-flow { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-top: 34px; }
+.p-step { position: relative; padding: 28px clamp(16px, 2.2vw, 32px) 0 0; border-top: 1px solid var(--line-2); }
+.p-step::before { content: ''; position: absolute; top: -4px; left: 0; width: 7px; height: 7px; background: var(--gold); transform: rotate(45deg); }
+.p-step--next { margin-left: clamp(16px, 2.4vw, 36px); padding-right: 0; border-top-color: var(--line); }
+.p-step--next::before { background: var(--night); box-shadow: inset 0 0 0 1px var(--gold); }
+.p-step__phase { position: absolute; left: 0; bottom: calc(100% + 14px); white-space: nowrap; color: var(--bone-3); }
+.p-step--next .p-step__phase { color: var(--gold); }
+.p-step__n { display: block; font-weight: 800; font-stretch: 62%; font-size: clamp(44px, 4.4vw, 72px); line-height: 0.8; color: transparent; -webkit-text-stroke: 1.25px oklch(0.94 0.018 85 / 0.8); }
+.p-step .h3 { margin-top: 20px; }
+.p-step p { margin-top: 10px; max-width: 30em; font-size: 15px; line-height: 1.5; color: var(--bone-2); }
+
+/* Prototypes */
 .p-plates { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(16px, 2vw, 28px); align-items: start; }
 .p-plates .frame { border: 0; cursor: pointer; }
 .vframe--live { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #000; }
 #prototypes .art-note { margin-top: clamp(24px, 3.6vh, 36px); }
-
-/* Capability table: what it does and which prototype shows it */
-.p-table { width: 100%; margin-top: clamp(28px, 4vh, 40px); border-collapse: collapse; text-align: left; }
-.p-table thead th {
-  padding: 0 24px 12px 0; border-bottom: 1px solid var(--line-2);
-  font-stretch: var(--wide); font-weight: 600; font-size: var(--fs-hud); letter-spacing: var(--track); text-transform: uppercase; color: var(--bone-3);
-}
-.p-table tbody th, .p-table td { padding: 18px 24px 18px 0; vertical-align: top; border-bottom: 1px solid var(--line); }
-.p-table tbody th { width: 33%; font-weight: 800; font-stretch: 62%; font-size: var(--fs-h3); line-height: 0.95; text-transform: uppercase; }
-.p-table td { color: var(--bone-2); }
-.p-table td:last-child {
-  width: 16%; padding-right: 0; white-space: nowrap;
-  font-stretch: var(--wide); font-weight: 600; font-size: var(--fs-hud); letter-spacing: var(--track); text-transform: uppercase; color: var(--bone-3);
-}
-.p-where { display: grid; grid-template-columns: minmax(0, 30%) minmax(0, 1fr); gap: 24px; margin-top: clamp(40px, 6vh, 64px); }
+.p-where { display: grid; grid-template-columns: minmax(0, 30%) minmax(0, 1fr); gap: 24px; margin-top: clamp(40px, 6vh, 64px); padding-top: clamp(28px, 4vh, 40px); border-top: 1px solid var(--line); }
 .p-where p { max-width: 36em; font-size: var(--fs-lede); line-height: 1.5; color: var(--bone); }
 
-/* Pilot: a raised band with the form */
+/* Beyond the proof: an illustrated booth activation beside three directions */
+.p-beyond { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(32px, 5vw, 72px); align-items: start; }
+.p-scene { position: relative; background: var(--night-2); box-shadow: inset 0 0 0 1px var(--line); --bk: var(--bone-2); --bl: 12px; --bi: 0; }
+.p-scene__art { position: relative; aspect-ratio: 720 / 450; overflow: hidden; border-bottom: 1px solid var(--line); }
+.p-scene svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.p-scene svg * { vector-effect: non-scaling-stroke; }
+.p-scene .s-ln { fill: none; stroke: var(--line-2); }
+.p-scene .s-banner rect { fill: var(--night-3); stroke: var(--line-2); }
+.p-scene .s-card rect { fill: none; stroke: var(--bone-3); }
+.p-scene .s-mark { fill: var(--gold); }
+.p-scene .s-bezel { fill: var(--night); stroke: var(--line-2); }
+.p-scene image { opacity: 0.92; }
+.p-scene .s-hi { fill: none; stroke: var(--bone-2); }
+.p-scene .s-body { fill: oklch(0.3 0.025 285); stroke: var(--bone-2); stroke-linecap: round; }
+.p-scene .s-visor { fill: var(--night); stroke: var(--gold); stroke-width: 1.5; }
+.p-scene .s-top { fill: var(--night-3); stroke: var(--bone-2); }
+.p-scene .s-cards polygon { fill: var(--night); stroke: var(--gold); }
+.p-scene .s-skirt { fill: var(--night-2); stroke: var(--line-2); }
+.p-scene .s-crowd > * { fill: oklch(0.1 0.015 285); stroke: var(--line-2); }
+.p-scene__pin, .p-scene__key li::before {
+  display: inline-grid; place-items: center; width: 24px; height: 24px; flex: none;
+  font-stretch: var(--wide); font-weight: 600; font-size: var(--fs-hud); line-height: 1; font-variant-numeric: tabular-nums; color: var(--gold-ink);
+  --cut: 5px; background: linear-gradient(135deg, transparent var(--cut), var(--gold) calc(var(--cut) + 0.5px) calc(100% - var(--cut) - 0.5px), transparent calc(100% - var(--cut)));
+}
+.p-scene__pin { position: absolute; left: var(--x); top: var(--y); translate: -50% -50%; }
+.p-scene figcaption { padding: 16px 20px 18px; }
+.p-scene__tag { color: var(--bone-3); }
+.p-scene__key { list-style: none; counter-reset: key; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 20px; margin-top: 14px; }
+.p-scene__key li { counter-increment: key; display: flex; align-items: center; gap: 10px; font-size: var(--fs-small); line-height: 1.35; color: var(--bone-2); }
+.p-scene__key li::before { content: counter(key); }
+
+.p-ideas { list-style: none; border-top: 1px solid var(--line-2); }
+.p-idea { padding: 22px 0; border-bottom: 1px solid var(--line); }
+.p-idea:first-child { padding-top: 18px; }
+.p-idea__tag { color: var(--bone-3); }
+.p-idea .h3 { margin-top: 10px; }
+.p-idea p:last-child { margin-top: 10px; max-width: 32em; font-size: 15px; line-height: 1.5; color: var(--bone-2); }
+.p-beyond__note { display: flex; align-items: baseline; gap: 12px; margin-top: clamp(28px, 4vh, 40px); max-width: 44em; font-size: var(--fs-small); line-height: 1.5; color: var(--bone-2); }
+.p-beyond__note::before { content: ''; flex: none; width: 6px; height: 6px; background: var(--gold); transform: translateY(-2px) rotate(45deg); }
+
+/* Pilot: a raised band with the proof at a glance and the form */
 .p-pilot { margin-top: clamp(96px, 14vh, 160px); background: var(--night-2); border-block: 1px solid var(--line); }
 .p-pilot__inner { width: min(1160px, 100%); margin: 0 auto; padding: clamp(56px, 9vh, 96px) var(--gut); display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
 .p-pilot .lede { margin-top: 18px; }
-.p-steps { list-style: none; counter-reset: step; margin-top: 32px; border-top: 1px solid var(--line); }
-.p-steps li { counter-increment: step; display: grid; grid-template-columns: 44px minmax(0, 1fr); padding: 16px 0; border-bottom: 1px solid var(--line); color: var(--bone-2); }
-.p-steps li::before {
-  content: counter(step, decimal-leading-zero); padding-top: 4px;
-  font-stretch: var(--wide); font-weight: 600; font-size: var(--fs-hud); letter-spacing: var(--track); color: var(--gold); font-variant-numeric: tabular-nums;
-}
-.p-steps b { color: var(--bone); font-weight: 600; }
+.p-spec { margin-top: 32px; border-top: 1px solid var(--line); }
+.p-spec > div { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.p-spec dt { padding-top: 3px; color: var(--bone-3); }
+.p-spec dd { color: var(--bone); }
 
 .pilot { position: relative; padding: 0 clamp(22px, 3vw, 34px) clamp(22px, 3vw, 34px); background: var(--night); box-shadow: inset 0 0 0 1px var(--line); --bk: var(--bone-2); --bl: 12px; --bi: 0; }
 .pilot .hudbox__bar { margin: 0 calc(-1 * clamp(22px, 3vw, 34px)) 24px; padding-inline: clamp(22px, 3vw, 34px); }
@@ -110,9 +166,13 @@ main, .p-foot { position: relative; z-index: 5; }
 .p-foot .fine { grid-column: 1 / -1; padding-top: 20px; border-top: 1px solid var(--line); }
 .p-foot .fine a { color: var(--bone-2); }
 
+@media (prefers-reduced-motion: reduce) {
+  .p-card { transition-duration: 0.4s; }
+}
 @media (max-width: 1000px) {
-  .p-own, .p-pilot__inner { grid-template-columns: minmax(0, 1fr); }
-  .p-own__head { margin-bottom: 28px; }
+  .p-proof, .p-beyond, .p-pilot__inner { grid-template-columns: minmax(0, 1fr); }
+  .p-hand { width: min(460px, 100%); margin: 0 auto 32px; }
+  .p-beyond .p-ideas { margin-top: 32px; }
 }
 @media (max-width: 860px) {
   .p-hero__foot, .p-sec__head, .p-plates { grid-template-columns: minmax(0, 1fr); }
@@ -120,12 +180,13 @@ main, .p-foot { position: relative; z-index: 5; }
   .p-sec__head .lede { margin-top: 14px; }
   .p-plates .plate + .plate { margin-top: 28px; }
   .p-where { grid-template-columns: minmax(0, 1fr); gap: 10px; }
-  .p-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-  .p-table, .p-table tbody, .p-table tr, .p-table tbody th, .p-table td { display: block; width: auto; }
-  .p-table tr { padding: 20px 0; border-bottom: 1px solid var(--line); }
-  .p-table tbody th, .p-table td { padding: 0; border: 0; }
-  .p-table td { margin-top: 8px; }
-  .p-table td:last-child { width: auto; }
+  /* The track turns vertical and runs down the left */
+  .p-flow { grid-template-columns: minmax(0, 1fr); padding-top: 0; }
+  .p-step { padding: 0 0 36px 30px; border-top: 0; border-left: 1px solid var(--line-2); }
+  .p-step::before { top: 2px; left: -4px; }
+  .p-step--next { margin: 14px 0 0; padding-bottom: 0; border-left-color: var(--line); }
+  .p-step__phase { position: static; display: block; margin-bottom: 14px; }
+  .p-step .h3 { margin-top: 14px; }
 }
 @media (max-width: 640px) {
   .p-hero { min-height: 88vh; padding-top: 120px; }
@@ -135,6 +196,10 @@ main, .p-foot { position: relative; z-index: 5; }
   .p-actions .btn { flex: 1 1 100%; }
   .p-terms__row { grid-template-columns: 36px minmax(0, 1fr); gap: 8px 12px; }
   .p-terms__row dd { grid-column: 2; }
+  .p-scene__pin { width: 20px; height: 20px; }
+  .p-scene figcaption { padding: 14px 16px 16px; }
+  .p-scene__key { grid-template-columns: minmax(0, 1fr); }
+  .p-spec > div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .pilot__fields { grid-template-columns: minmax(0, 1fr); }
   .pilot__send { justify-self: stretch; }
   .p-foot { grid-template-columns: minmax(0, 1fr); }
