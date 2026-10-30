@@ -162,7 +162,7 @@ Dimension." is the largest text on both pages: no other line may be set bigger.
 - Home scenes pad by `gutter` on the left and `gutter + rail` on the right, so text never runs under
   the rail or the readout.
 - Hero: one HUD tag top left, the trailer viewfinder on the right, the signature line across
-  the bottom with the lede (7) and the actions (5) under it. Prototypes: heading and lede, then three
+  the bottom with the lede (7) and the actions (5) under it. Prototypes: heading and lede, then two
   panels of one size, then the pilot link and the art note. Waitlist: the band full-bleed, then the heading
   (6) and the box (5). Contact: left over the cathedral, fine print along the bottom.
 - Every scene must fit 1280×590 without scrolling (a 1280×720 laptop at 150% scaling, minus the

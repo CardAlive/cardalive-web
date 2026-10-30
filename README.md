@@ -3,7 +3,7 @@
 Marketing site for **CardAlive**, the mixed-reality platform for trading-card games on Meta Quest 3:
 "Your cards. Your rules. Your world, alive." It has two audiences and two paths. **Publishers** go to
 `/publishers/` and can explore a pilot. **Players** join the waitlist on the home page. The two
-original prototypes (AR Card Battles and Kishi City) are presented as capability demonstrations of
+original prototypes on the home page (AR Card Battles and the Walk with Kishi tutorial) are presented as capability demonstrations of
 the technology, not as a separate TCG. The stance is partnership: CardAlive helps and partners with
 TCG publishers and does not compete with them, and the copy says so on every page. Copy must not
 imply that every existing game can already be fully integrated. "Every Card Game Deserves Another
@@ -40,7 +40,7 @@ over the roofs while the text dissolves out and re-forms.
 | # | Scene (`id`) | Camera (`data-cam`) | What's in it |
 |---|---|---|---|
 | I | `hero` | `hero` | a HUD tag top left; the trailer loop in a viewfinder on the right; across the bottom the signature line, lede, For publishers (and Watch the trailer when the viewfinder is hidden), the player waitlist link |
-| II | `prototypes` | `scale-table` | See what CardAlive can do: three prototype panels of one size, each opens its video in a dialog; the artwork note |
+| II | `prototypes` | `scale-table` | See what CardAlive can do: two prototype panels of one size (01 AR Card Battles, 02 Walk with Kishi), each opens its video in a dialog; the artwork note |
 | III | `waitlist` | `finale` | the tagline in a full-width band, fitted to the screen by `fit.js`, that slides in with the scroll and rests whole, "Be first to play." and a HUD panel with the waitlist field and a line to the publishers page |
 | IV | `contact` | `contact` | contact email field ("Send a raven"), fine print |
 
@@ -182,11 +182,11 @@ at `&`. A clean scan prints nothing.
 |---|---|---|
 | Trailer, 40 s | hero button, hero teaser | `assets/video/cardalive-trailer.mp4` (+ `-loop.mp4` teaser, `.jpg` poster) |
 | Prototype 01 · AR Card Battles, 1:05 | scene II dialog, `/publishers/` inline | `assets/video/where-we-are-now.mp4`, the tabletop card battle recorded in-headset. Thumbnail `assets/img/prototype-01.jpg` |
-| Prototype 02 · Kishi City, 1:16 | scene II dialog, `/publishers/` inline | YouTube, unlisted on the CardAlive channel: `3THAZpt9uw8` ("Prototype 02: Every Character Has a World"). Thumbnail `assets/img/prototype-02.jpg` is YouTube's 640×480 `sddefault` frame with the letterbox cropped off |
-| Prototype 03 · Walk with Kishi, 2:05 | scene II dialog, `/publishers/` inline | `assets/video/walk-with-kishi.mp4`, the CardAlive Tutorial build (`com.cardalive.sgcitywalk.master`) recorded in-headset on 2026-10-29: Kishi's city projected onto a desk, then the walk with him and the bridge carry. Re-encoded from the Quest's HEVC to H.264 720p30 (the command below, plus `fps=30`). Poster `assets/video/walk-with-kishi.jpg` and thumbnail `assets/img/prototype-03.jpg` are the 0:23 frame |
+| Prototype 02 · Kishi City, 1:16 | `/publishers/` inline (off the home page since 2026-10-30) | YouTube, unlisted on the CardAlive channel: `3THAZpt9uw8` ("Prototype 02: Every Character Has a World"). Thumbnail `assets/img/prototype-02.jpg` is YouTube's 640×480 `sddefault` frame with the letterbox cropped off |
+| Prototype 03 · Walk with Kishi, 2:05 | scene II dialog (numbered 02 there, tagged in development), `/publishers/` inline | `assets/video/walk-with-kishi.mp4`, the CardAlive Tutorial build (`com.cardalive.sgcitywalk.master`) recorded in-headset on 2026-10-29: Kishi's city projected onto a desk, then the walk with him and the bridge carry. Re-encoded from the Quest's HEVC to H.264 720p30 (the command below, plus `fps=30`). Poster `assets/video/walk-with-kishi.jpg` and thumbnail `assets/img/prototype-03.jpg` are the 0:23 frame |
 
-YouTube loads only when a visitor presses play: the scene II dialog builds the player when it opens
-and removes it on close, and `/publishers/` swaps the still for the player in place
+YouTube loads only when a visitor presses play: a scene II dialog with `data-yt` builds the player when it
+opens and removes it on close (none uses it now), and `/publishers/` swaps the still for the player in place
 (`assets/js/publishers.js`). Both use `youtube-nocookie.com`. To use a YouTube upload for Prototype 01
 too, give its dialog a `<div class="reel__video" data-yt="ID">` instead of the `<video>`, and give its
 `/publishers/` button `data-yt` instead of `data-src`.
