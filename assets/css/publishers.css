@@ -82,7 +82,7 @@ main, .p-foot { position: relative; z-index: 5; }
 .p-step p { margin-top: 10px; max-width: 30em; font-size: 15px; line-height: 1.5; color: var(--bone-2); }
 
 /* Prototypes */
-.p-plates { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(16px, 2vw, 28px); align-items: start; }
+.p-plates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(20px, 3vw, 40px); align-items: start; }
 .p-plates .frame { border: 0; cursor: pointer; }
 .vframe--live { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #000; }
 #prototypes .art-note { margin-top: clamp(24px, 3.6vh, 36px); }

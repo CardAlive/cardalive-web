@@ -27,7 +27,7 @@ no build step.
 | Path | File | What it is |
 |---|---|---|
 | `/` | `index.html` | the stage: four full-screen scenes over the real-time city |
-| `/publishers/` | `publishers/index.html` | a plain scrolling page that sells one offer, a private four-card proof of concept: the signature line and "Bring four of your cards to life." over a still of the city; what's in a proof (a hand of four blank cards beside the terms: four characters, permitted assets, private, your game stays yours); how it works (four steps on a track, the first three private, the fourth only by mutual interest); the three prototypes inline and where we are; beyond the proof (an illustrated shared-screen booth and three longer-term directions); the pilot form with the proof at a glance, on a raised band |
+| `/publishers/` | `publishers/index.html` | a plain scrolling page that sells one offer, a private four-card proof of concept: the signature line and "Bring four of your cards to life." over a still of the city; what's in a proof (a hand of four blank cards beside the terms: four characters, permitted assets, private, your game stays yours); how it works (four steps on a track, the first three private, the fourth only by mutual interest); the two prototypes inline (01 AR Card Battles, 02 the Walk with Kishi tutorial, numbered as on the home page) and where we are; beyond the proof (an illustrated shared-screen booth and three longer-term directions); the pilot form with the proof at a glance, on a raised band |
 | `/contact/` | `contact/index.html` | redirects to `/#contact`, shows the address without JavaScript |
 
 ## How the home page works
@@ -182,12 +182,15 @@ at `&`. A clean scan prints nothing.
 |---|---|---|
 | Trailer, 40 s | hero button, hero teaser | `assets/video/cardalive-trailer.mp4` (+ `-loop.mp4` teaser, `.jpg` poster) |
 | Prototype 01 · AR Card Battles, 1:05 | scene II dialog, `/publishers/` inline | `assets/video/where-we-are-now.mp4`, the tabletop card battle recorded in-headset. Thumbnail `assets/img/prototype-01.jpg` |
-| Prototype 02 · Kishi City, 1:16 | `/publishers/` inline (off the home page since 2026-10-30) | YouTube, unlisted on the CardAlive channel: `3THAZpt9uw8` ("Prototype 02: Every Character Has a World"). Thumbnail `assets/img/prototype-02.jpg` is YouTube's 640×480 `sddefault` frame with the letterbox cropped off |
-| Prototype 03 · Walk with Kishi, 2:05 | scene II dialog (numbered 02 there, tagged in development), `/publishers/` inline | `assets/video/walk-with-kishi.mp4`, the CardAlive Tutorial build (`com.cardalive.sgcitywalk.master`) recorded in-headset on 2026-10-29: Kishi's city projected onto a desk, then the walk with him and the bridge carry. Re-encoded from the Quest's HEVC to H.264 720p30 (the command below, plus `fps=30`). Poster `assets/video/walk-with-kishi.jpg` and thumbnail `assets/img/prototype-03.jpg` are the 0:23 frame |
+| Prototype 02 · Walk with Kishi, 2:05 | scene II dialog (tagged in development), `/publishers/` inline | `assets/video/walk-with-kishi.mp4`, the CardAlive Tutorial build (`com.cardalive.sgcitywalk.master`) recorded in-headset on 2026-10-29: Kishi's city projected onto a desk, then the walk with him and the bridge carry. Re-encoded from the Quest's HEVC to H.264 720p30 (the command below, plus `fps=30`). Poster `assets/video/walk-with-kishi.jpg` and thumbnail `assets/img/prototype-03.jpg` are the 0:23 frame |
 
-YouTube loads only when a visitor presses play: a scene II dialog with `data-yt` builds the player when it
-opens and removes it on close (none uses it now), and `/publishers/` swaps the still for the player in place
-(`assets/js/publishers.js`). Both use `youtube-nocookie.com`. To use a YouTube upload for Prototype 01
+Kishi City (the old Prototype 02, an unlisted YouTube upload) left the home page on 2026-10-30 and
+`/publishers/` on 2026-10-31, with its thumbnail; the walk tutorial took its number on both pages.
+
+Neither page embeds YouTube now, but both still can, and load it only when a visitor presses play: a
+scene II dialog with `data-yt` builds the player when it opens and removes it on close, and a
+`/publishers/` button with `data-yt` swaps its still for the player in place (`assets/js/publishers.js`).
+Both use `youtube-nocookie.com`. To use a YouTube upload for Prototype 01
 too, give its dialog a `<div class="reel__video" data-yt="ID">` instead of the `<video>`, and give its
 `/publishers/` button `data-yt` instead of `data-src`.
 
@@ -212,12 +215,12 @@ ffmpeg -i raw.mp4 -vf scale=-2:720 -c:v libx264 -profile:v high -pix_fmt yuv420p
 ```
 
 Several city source packs in the game repo are still marked `LICENSE_REVIEW_REQUIRED`
-(`CardAlive/Environments/ATTRIBUTION.md`). In-engine captures of the city are on the site in three
+(`CardAlive/Environments/ATTRIBUTION.md`). In-engine captures of the city are on the site in two
 places only. The first is the trailer's two in-engine shots (0:26–0:30 of the 40 s cut, Kishi in the
-alley and the city diorama), live since 2026-10-13 on the owner's call. The second is Prototype 02's
-video and thumbnail, which the 2026-10-21 redesign brief asked for. The third is Prototype 03's video,
-poster and thumbnail, added on the owner's request on 2026-10-29. If a pack turns out to forbid
-this, re-cut the trailer and the Prototype 02 and 03 videos without it, and pick other thumbnails.
+alley and the city diorama), live since 2026-10-13 on the owner's call. The second is Walk with Kishi's
+video, poster and thumbnail (Prototype 02), added on the owner's request on 2026-10-29. If a pack
+turns out to forbid this, re-cut the trailer and the Walk with Kishi video without it, and pick another
+thumbnail.
 
 ## Forms: waitlist, contact, pilot
 
